@@ -1,0 +1,24 @@
+{
+  "name": "web_frameworks",
+  "version": "1.0.0",
+  "description": "Solutions to assignments for the course Web Frameworks of semester-3 SE",
+  "author": "",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "main": "index.js",
+  "dependencies": {
+    "core-js": "^3.8.3",
+    "fetch-intercept": "^2.4.0",
+    "postcss": "^8.4.29",
+    "sockjs-client": "^1.6.1",
+    "vue": "^3.3.4",
+    "vue-router": "^4.2.4",
+    "whatwg-fetch": "^3.6.18"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "~5.0.0"
+  },
+  "keywords": [],
+  "license": "ISC"
+}
