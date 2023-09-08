@@ -1,6 +1,6 @@
 <template>
   <HeaderComponent />
-  <WelcomeComponent auctionTitle="Random auction title" auction-description="test"/>
+  <WelcomeComponent/>
 </template>
 
 <script>
