@@ -11,7 +11,7 @@ export default {
 </script>
 
 <template>
-  <header class="w-100 container-fluid bg-secondary text-white">
+  <header class="w-100 container-fluid bg-info">
     <div class="d-flex">
       <div class="left-img p-1 border-light">
         <img src="../assets/gavel.jpg" class="rounded" alt="picture of a gavel">
