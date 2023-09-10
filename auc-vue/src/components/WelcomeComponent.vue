@@ -10,6 +10,7 @@
             v-for="category in categories"
             :key="category"
             class="my-1 rounded-3 btn btn-outline-secondary w-100"
+            href="#"
           >
             {{ category }}
           </button>
@@ -91,20 +92,23 @@ export default {
   width: 350px;
 }
 
+.container-fluid {
+  max-width: 1920px;
+}
+
 img {
   width: 100%;
   cursor: pointer;
+  filter: brightness(90%);
+  transition: all 0.2s ease-in-out;
+}
+img:hover {
+  filter: brightness(100%);
+  box-shadow: var(--bs-box-shadow);
 }
 
 .img-container {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
-}
-
-.single-category {
-  cursor: pointer;
-}
-.single-category:hover {
-  background-color: var(--bs-gray-300) !important;
 }
 </style>
