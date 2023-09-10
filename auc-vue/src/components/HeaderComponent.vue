@@ -1,13 +1,13 @@
 <script>
 export default {
-  name: "HeaderComponent"
-}
+  name: "HeaderComponent",
+};
 </script>
 
 <template>
-  <h2>Deze header is ingeladen!</h2>
+  <div class="temp-header-container">
+    <h2>Deze header is ingeladen!</h2>
+  </div>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

@@ -1,17 +1,24 @@
 <template>
-  <div class="container-fluid bg-body px-5 pt-3">
+  <div class="container-fluid bg-body px-5 py-3 h-100">
     <div class="row">
       <div class="col-3 flex-column">
-        <div class="bg-body-tertiary p-4 rounded-3 border">
-          <h4>Pick a date</h4>
-          <input type="date" id="date" />
-          <h4>Pick a category</h4>
+        <div class="bg-body-tertiary p-4 rounded-3 border h-100">
+          <h4 class="mb-3 fw-bold">Pick a date</h4>
+          <input type="date" id="date" class="form-control" />
+          <h4 class="mb-3 mt-5 fw-bold">Pick a category</h4>
+          <button
+            v-for="category in categories"
+            :key="category"
+            class="my-1 rounded-3 btn btn-outline-secondary w-100"
+          >
+            {{ category }}
+          </button>
         </div>
       </div>
       <div class="col">
         <div class="bg-body-tertiary p-4 rounded-3 border">
-          <h4 class="mb-3">Auctions that expire today</h4>
-          <div class="flex gap-5">
+          <h4 class="mb-3 fw-bold">Auctions that expire today</h4>
+          <div class="img-container w-100 gap-2">
             <img
               v-for="image in images"
               :key="image.id"
@@ -23,8 +30,8 @@
         </div>
       </div>
       <div class="col-3">
-        <div class="bg-body-tertiary p-4 rounded-3 border">
-          <h4>{{ randomAuction.title }}</h4>
+        <div class="bg-body-tertiary p-4 rounded-3 border h-100">
+          <h4 class="mb-3 fw-bold">{{ randomAuction.title }}</h4>
           <p>{{ randomAuction.description }}</p>
           <h6>Auction closes at: {{ randomAuction.dueDate }}</h6>
         </div>
@@ -67,6 +74,13 @@ export default {
           src: "https://fastly.picsum.photos/id/879/200/200.jpg?hmac=_4fWz44KoPcfzc5VRuEhms_-fXjdx1VsijYO3xVD9b0",
         },
       ],
+      categories: [
+        "Random category 1",
+        "Random category 2",
+        "Random category 3",
+        "Random category 4",
+        "Random category 5",
+      ],
     };
   },
 };
@@ -74,14 +88,23 @@ export default {
 
 <style scoped>
 .col-3 {
-  width: 400px;
-}
-
-.container-fluid {
-  height: 100vh;
+  width: 350px;
 }
 
 img {
-  width: 250px;
+  width: 100%;
+  cursor: pointer;
+}
+
+.img-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+}
+
+.single-category {
+  cursor: pointer;
+}
+.single-category:hover {
+  background-color: var(--bs-gray-300) !important;
 }
 </style>

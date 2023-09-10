@@ -1,6 +1,6 @@
 <template>
   <HeaderComponent />
-  <WelcomeComponent/>
+  <WelcomeComponent />
 </template>
 
 <script>
@@ -10,12 +10,9 @@ export default {
   name: "App",
   components: {
     HeaderComponent,
-    WelcomeComponent
-  }
-}
+    WelcomeComponent,
+  },
+};
 </script>
 
-
-
-<style scoped>
-</style>
+<style scoped></style>
