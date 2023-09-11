@@ -1,7 +1,7 @@
 <template>
   <header class="w-100 container-fluid bg-body-tertiary border-bottom px-5">
     <div class="d-flex">
-      <div class="left-img p-1 border-light">
+      <div class="left-img border-light pt-2">
         <img
           src="../assets/gavel.jpg"
           class="rounded"
@@ -17,7 +17,7 @@
           <h6 class="col text-end m-0 my-2">{{ subtitle }}</h6>
         </div>
       </div>
-      <div class="right-img p-1">
+      <div class="right-img pt-2">
         <img
           src="../assets/auction-paddle.jpg"
           class="rounded"
