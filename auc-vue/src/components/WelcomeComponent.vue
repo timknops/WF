@@ -1,22 +1,19 @@
 <template>
   <div class="container-fluid bg-body px-5 py-3 h-100">
     <div class="row">
-      <div class="col-3 flex-column">
+      <div class="col-xl-3 flex-column mt-xl-0 mt-2">
         <div class="bg-body-tertiary p-4 rounded-3 border h-100">
           <h4 class="mb-3 fw-bold">Pick a date</h4>
           <input type="date" id="date" class="form-control" />
-          <h4 class="mb-3 mt-5 fw-bold">Pick a category</h4>
-          <button
-            v-for="category in categories"
-            :key="category"
-            class="my-1 rounded-3 btn btn-outline-secondary w-100"
-            href="#"
-          >
-            {{ category }}
-          </button>
+          <h4 class="mb-3 mt-4 fw-bold">Pick a category</h4>
+          <p v-for="category in categories" :key="category" class="my-4">
+            <a href="#" :key="category" class="bg-primary-subtle p-2 rounded-3">
+              - {{ category }}</a
+            >
+          </p>
         </div>
       </div>
-      <div class="col">
+      <div class="col-xl my-xl-0 my-4">
         <div class="bg-body-tertiary p-4 rounded-3 border">
           <h4 class="mb-3 fw-bold">Auctions that expire today</h4>
           <div class="img-container w-100 gap-2">
@@ -30,7 +27,7 @@
           </div>
         </div>
       </div>
-      <div class="col-3">
+      <div class="col-xl-3 mb-xl-0 mb-2">
         <div class="bg-body-tertiary p-4 rounded-3 border h-100">
           <h4 class="mb-3 fw-bold">{{ randomAuction.title }}</h4>
           <p>{{ randomAuction.description }}</p>
@@ -58,14 +55,14 @@ export default {
         "https://fastly.picsum.photos/id/804/200/200.jpg?hmac=73qw3Bnt67aOsdWd033BvfX9Gq0gIJ6FSL3Dp3gA97E",
         "https://fastly.picsum.photos/id/560/200/200.jpg?hmac=Dqou6QpKCTK2srRsCRhlIxLQHvFL7zz6UocOb3UkpwI",
         "https://fastly.picsum.photos/id/451/200/200.jpg?hmac=ZxfTfjtPhONiVjaPd1HG3lQuTRy_puiwOF6qStaMe7g",
-          "https://fastly.picsum.photos/id/879/200/200.jpg?hmac=_4fWz44KoPcfzc5VRuEhms_-fXjdx1VsijYO3xVD9b0"
+        "https://fastly.picsum.photos/id/879/200/200.jpg?hmac=_4fWz44KoPcfzc5VRuEhms_-fXjdx1VsijYO3xVD9b0",
       ],
       categories: [
-        "Random category 1",
-        "Random category 2",
-        "Random category 3",
-        "Random category 4",
-        "Random category 5",
+        "Antiques",
+        "Cars ",
+        "Event Tickets",
+        "Holidays",
+        "Collectables",
       ],
     };
   },
@@ -73,10 +70,6 @@ export default {
 </script>
 
 <style scoped>
-.col-3 {
-  width: 350px;
-}
-
 .container-fluid {
   max-width: 1920px;
 }
@@ -95,5 +88,13 @@ img:hover {
 .img-container {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+}
+
+a {
+  text-decoration: none;
+}
+a:hover {
+  color: var(--bs-primary-text-emphasis);
+  background-color: var(--bs-gray-300) !important;
 }
 </style>
