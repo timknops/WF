@@ -11,7 +11,7 @@ export default {
 </script>
 
 <template>
-  <header class="w-100 container-fluid bg-info">
+  <header class="w-100 container-fluid bg-body-tertiary border-bottom">
     <div class="d-flex">
       <div class="left-img p-1 border-light">
         <img
@@ -21,7 +21,7 @@ export default {
         />
       </div>
       <div class="center p-1 col">
-        <div class="title pb-1 border-light border-bottom">
+        <div class="title pb-1 border-bottom">
           <h1 class="text-center">{{ title }}</h1>
         </div>
         <div class="sub-title">
