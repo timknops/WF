@@ -22,8 +22,8 @@
           <div class="img-container w-100 gap-2">
             <img
               v-for="image in images"
-              :key="image.id"
-              :src="image.src"
+              :key="image"
+              :src="image"
               alt="random auction image"
               class="rounded-3"
             />
@@ -34,7 +34,7 @@
         <div class="bg-body-tertiary p-4 rounded-3 border h-100">
           <h4 class="mb-3 fw-bold">{{ randomAuction.title }}</h4>
           <p>{{ randomAuction.description }}</p>
-          <h6>Auction closes at: {{ randomAuction.dueDate }}</h6>
+          <h6 class="fw-bold">Action closes at: {{ randomAuction.dueDate }}</h6>
         </div>
       </div>
     </div>
@@ -54,26 +54,11 @@ export default {
         dueDate: "23-08-2023",
       },
       images: [
-        {
-          id: 1,
-          src: "https://fastly.picsum.photos/id/649/200/200.jpg?hmac=tj148mYv7Me5ctSyCePc_TNjma4W3n3RwnqJcIogLoI",
-        },
-        {
-          id: 2,
-          src: "https://fastly.picsum.photos/id/804/200/200.jpg?hmac=73qw3Bnt67aOsdWd033BvfX9Gq0gIJ6FSL3Dp3gA97E",
-        },
-        {
-          id: 3,
-          src: "https://fastly.picsum.photos/id/560/200/200.jpg?hmac=Dqou6QpKCTK2srRsCRhlIxLQHvFL7zz6UocOb3UkpwI",
-        },
-        {
-          id: 4,
-          src: "https://fastly.picsum.photos/id/451/200/200.jpg?hmac=ZxfTfjtPhONiVjaPd1HG3lQuTRy_puiwOF6qStaMe7g",
-        },
-        {
-          id: 5,
-          src: "https://fastly.picsum.photos/id/879/200/200.jpg?hmac=_4fWz44KoPcfzc5VRuEhms_-fXjdx1VsijYO3xVD9b0",
-        },
+        "https://fastly.picsum.photos/id/649/200/200.jpg?hmac=tj148mYv7Me5ctSyCePc_TNjma4W3n3RwnqJcIogLoI",
+        "https://fastly.picsum.photos/id/804/200/200.jpg?hmac=73qw3Bnt67aOsdWd033BvfX9Gq0gIJ6FSL3Dp3gA97E",
+        "https://fastly.picsum.photos/id/560/200/200.jpg?hmac=Dqou6QpKCTK2srRsCRhlIxLQHvFL7zz6UocOb3UkpwI",
+        "https://fastly.picsum.photos/id/451/200/200.jpg?hmac=ZxfTfjtPhONiVjaPd1HG3lQuTRy_puiwOF6qStaMe7g",
+          "https://fastly.picsum.photos/id/879/200/200.jpg?hmac=_4fWz44KoPcfzc5VRuEhms_-fXjdx1VsijYO3xVD9b0"
       ],
       categories: [
         "Random category 1",
