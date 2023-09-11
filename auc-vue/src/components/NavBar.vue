@@ -41,7 +41,7 @@
         </ul>
         <ul class="navbar-nav">
           <li class="nav-item mx-1">
-            <button class="btn btn-primary">Sign-up</button>
+            <button class="btn btn-secondary">Sign-up</button>
           </li>
           <li class="nav-item">
             <button class="btn btn-primary">Login</button>
