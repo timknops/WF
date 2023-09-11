@@ -34,7 +34,7 @@ export default {
   data() {
     return {
       title: "Auctioneer",
-      subtitle: "Powered to you by HVA",
+      subtitle: "Powered to you by hva.nl",
     };
   },
   computed: {
