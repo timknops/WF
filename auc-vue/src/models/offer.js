@@ -59,10 +59,20 @@ export class Offer {
     const title = RANDOM_TITLES[randomIndex];
     const description = RANDOM_DESCRIPTIONS[randomIndex];
 
-    //get a random value out of the offer status object.
+    /*
+    Get a random status value out of the status object. Object.values returns a arraylist of all the values.
+    Then you access a random value between one and the length of the values array.
+    */
     const status = Object.values(Offer.Status)[
       Math.floor(Math.random() * Object.values(Offer.Status).length)
     ];
+
+    let sellDate;
+    const previousMonth = new Date().setMonth(new Date().getMonth() - 1);
+    const nextMonth = new Date().setMonth(new Date().getMonth() + 1);
+    if (status === Offer.Status.CLOSED || status === Offer.Status.EXPIRED) {
+      sellDate = Offer.randomDate(previousMonth, new Date());
+    }
   }
 
   /**
@@ -70,5 +80,19 @@ export class Offer {
    * @param start {Date}
    * @param end {Date}
    */
-  #randomDate(start, end) {}
+  static randomDate(start, end) {
+    const startInMilliseconds = start.valueOf();
+    const endInMilliseconds = end.valueOf();
+    return new Date(Offer.valueBetween(startInMilliseconds, endInMilliseconds));
+  }
+
+  /**
+   * Get a value between the given max and min including the min and max
+   * @param min {number} - the mininum value to be returned
+   * @param max {number} - the maximum value to be returned
+   * @return {number} random value between min and max
+   */
+  static valueBetween(min, max) {
+    return Math.floor(Math.random() * max + min);
+  }
 }
