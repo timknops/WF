@@ -1,19 +1,20 @@
 <template>
   <HeaderComponent />
   <NavBar />
-  <WelcomeComponent />
+  <OffersOverview31 />
 </template>
 
 <script>
 import HeaderComponent from "./components/HeaderComponent.vue";
-import WelcomeComponent from "./components/WelcomeComponent.vue";
 import NavBar from "@/components/NavBar.vue";
+import OffersOverview31 from "@/components/offers/OffersOverview31.vue";
+
 export default {
   name: "App",
   components: {
+    OffersOverview31,
     NavBar,
     HeaderComponent,
-    WelcomeComponent,
   },
 };
 </script>
