@@ -29,6 +29,8 @@
 </template>
 
 <script>
+import { Offer } from "../models/offer.js";
+
 export default {
   name: "HeaderComponent",
   data() {
@@ -38,6 +40,9 @@ export default {
     };
   },
   computed: {
+    Offer() {
+      return Offer;
+    },
     getCurrentDate() {
       const date = new Date();
 

@@ -1,5 +1,4 @@
 <template>
-  {{ Offer.createSampleOffer(2) }}
   <nav class="navbar navbar-expand-md bg-body-tertiary px-5">
     <div class="container-fluid p-0">
       <button

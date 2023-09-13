@@ -68,22 +68,45 @@ export class Offer {
     ];
 
     let sellDate;
-    const previousMonth = new Date().setMonth(new Date().getMonth() - 1);
-    const nextMonth = new Date().setMonth(new Date().getMonth() + 1);
-    if (status === Offer.Status.CLOSED || status === Offer.Status.EXPIRED) {
+
+    // create a date object from another Date object. This date object is the current date with a month less or more
+    // with setMonth you can change the month of the date object you called the function on.
+    const previousMonth = new Date(
+      new Date().setMonth(new Date().getMonth() - 1)
+    );
+    const nextMonth = new Date(new Date().setMonth(new Date().getMonth() + 1));
+    if (
+      status === Offer.Status.CLOSED ||
+      status === Offer.Status.EXPIRED ||
+      status === Offer.Status.SOLD
+    ) {
       sellDate = Offer.randomDate(previousMonth, new Date());
+    } else {
+      sellDate = Offer.randomDate(new Date(), nextMonth);
     }
+
+    let valueHighestBid;
+    // if status is now, the bidding value should be 0
+    if (status === Offer.Status.NEW) {
+      valueHighestBid = 0;
+    } else {
+      valueHighestBid = this.valueBetween(5, 3000);
+    }
+    return new Offer(id, title, status, description, sellDate, valueHighestBid);
   }
 
   /**
-   *
-   * @param start {Date}
-   * @param end {Date}
+   * get a random date between the start date and end Date
+   * @param start {Date} - the earliest date the function can return
+   * @param end {Date} - the latest date the function can return
    */
   static randomDate(start, end) {
+    //convert date to value in milliseconds, to make it able to use it in Math.random
     const startInMilliseconds = start.valueOf();
     const endInMilliseconds = end.valueOf();
-    return new Date(Offer.valueBetween(startInMilliseconds, endInMilliseconds));
+    console.log(startInMilliseconds, endInMilliseconds);
+    console.log(Offer.valueBetween(endInMilliseconds, startInMilliseconds));
+    return new Date(Offer.valueBetween(endInMilliseconds, startInMilliseconds));
   }
 
   /**
@@ -93,6 +116,6 @@ export class Offer {
    * @return {number} random value between min and max
    */
   static valueBetween(min, max) {
-    return Math.floor(Math.random() * max + min);
+    return Math.floor(Math.random() * (max - min) + min);
   }
 }
