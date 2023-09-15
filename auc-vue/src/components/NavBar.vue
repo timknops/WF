@@ -55,8 +55,15 @@
 </template>
 
 <script>
+import { Offer } from "../models/offer";
+
 export default {
   name: "NavBar",
+  computed: {
+    Offer() {
+      return Offer;
+    },
+  },
   data() {
     return {
       navItemsLeft: [
