@@ -1,5 +1,5 @@
 <template>
-  <h2 class="container mt-4 p-0 fw-bold text-primary">List of all offers</h2>
+  <h2 class="container mt-5 p-0 fw-bold text-primary">List of all offers</h2>
   <div
     class="table-container container rounded-3 my-3 px-0 border overflow-x-hidden overflow-y-scroll"
     ref="tableDiv"
@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import { Offer } from "@/models/offer";
+import { Offer } from "@/models/offer.js";
 
 export default {
   name: "OffersOverview31",
@@ -61,6 +61,7 @@ export default {
     onNewOffer() {
       this.offers.push(this.createNewOffer());
 
+      // Waits until the DOM is updated before updating the scroll position.
       this.$nextTick(() => {
         this.$refs.tableDiv.scrollTop = this.$refs.tableDiv.scrollHeight;
       });
