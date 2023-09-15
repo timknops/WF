@@ -104,8 +104,6 @@ export class Offer {
     //convert date to value in milliseconds, to make it able to use it in Math.random
     const startInMilliseconds = start.valueOf();
     const endInMilliseconds = end.valueOf();
-    console.log(startInMilliseconds, endInMilliseconds);
-    console.log(Offer.valueBetween(endInMilliseconds, startInMilliseconds));
     return new Date(Offer.valueBetween(endInMilliseconds, startInMilliseconds));
   }
 

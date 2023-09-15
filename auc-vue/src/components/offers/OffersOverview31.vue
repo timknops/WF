@@ -45,12 +45,6 @@ export default {
     };
   },
   methods: {
-    onNewOffer() {
-      this.offers.push(this.createNewOffer());
-
-      // this.$refs.tableDiv.scrollTop = this.$refs.tableDiv.scrollHeight;
-    },
-
     createNewOffer() {
       let newOffer = Offer.createSampleOffer((this.offerId += 3));
 
@@ -63,6 +57,14 @@ export default {
 
       return newOffer;
     },
+
+    onNewOffer() {
+      this.offers.push(this.createNewOffer());
+
+      this.$nextTick(() => {
+        this.$refs.tableDiv.scrollTop = this.$refs.tableDiv.scrollHeight;
+      });
+    },
   },
   created() {
     const OFFER_LIST_LENGTH = 8;
@@ -71,18 +73,11 @@ export default {
       this.offers.push(this.createNewOffer());
     }
   },
-  watch: {
-    scrollHeight() {
-      if (this.$refs.tableDiv.scrollHeight) {
-        this.$refs.tableDiv.scrollTop = this.$refs.tableDiv.scrollHeight;
-      }
-    },
-  },
 };
 </script>
 
 <style scoped>
 .table-container {
-  max-height: 55vh;
+  max-height: 50vh;
 }
 </style>
