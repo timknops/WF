@@ -2,6 +2,7 @@
   <h2 class="container mt-4 p-0 fw-bold text-primary">List of all offers</h2>
   <div
     class="table-container container rounded-3 my-3 px-0 border overflow-x-hidden overflow-y-scroll"
+    ref="tableDiv"
   >
     <table class="table mb-0 table-striped">
       <thead>
@@ -46,6 +47,8 @@ export default {
   methods: {
     onNewOffer() {
       this.offers.push(this.createNewOffer());
+
+      // this.$refs.tableDiv.scrollTop = this.$refs.tableDiv.scrollHeight;
     },
 
     createNewOffer() {
@@ -68,11 +71,18 @@ export default {
       this.offers.push(this.createNewOffer());
     }
   },
+  watch: {
+    scrollHeight() {
+      if (this.$refs.tableDiv.scrollHeight) {
+        this.$refs.tableDiv.scrollTop = this.$refs.tableDiv.scrollHeight;
+      }
+    },
+  },
 };
 </script>
 
 <style scoped>
 .table-container {
-  max-height: 50vh;
+  max-height: 55vh;
 }
 </style>
