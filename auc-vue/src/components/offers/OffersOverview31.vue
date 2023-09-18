@@ -6,7 +6,7 @@
   >
     <table class="table mb-0 table-striped">
       <thead>
-        <tr>
+        <tr class="sticky-top">
           <th scope="col">ID</th>
           <th scope="col">Title</th>
           <th scope="col">Selling Date</th>
