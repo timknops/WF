@@ -69,7 +69,6 @@ export default {
   },
   created() {
     const OFFER_LIST_LENGTH = 8;
-
     for (let i = 0; i < OFFER_LIST_LENGTH; i++) {
       this.offers.push(this.createNewOffer());
     }

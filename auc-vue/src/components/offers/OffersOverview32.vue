@@ -1,37 +1,52 @@
 <template>
-  <div class="w-25 mx-5">
-    <h2 class="mt-5 p-0 fw-bold text-primary">List of all offers</h2>
-    <div
-      class="rounded-3 my-3 px-0 border overflow-x-hidden overflow-y-scroll"
-      ref="tableDiv"
-    >
-      <table class="table mb-0 table-striped">
-        <thead>
-          <tr class="sticky-top">
-            <th scope="col">Title</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="offer in offers" :key="offer.id">
-            <td>{{ offer.title }}</td>
-          </tr>
-        </tbody>
-      </table>
+  <div class="container-fluid d-flex">
+    <div class="w-25 mx-5">
+      <h2 class="mt-5 p-0 fw-bold text-primary">List of all offers</h2>
+      <div
+        class="rounded-3 my-3 px-0 border overflow-x-hidden overflow-y-scroll table-container"
+        ref="tableDiv"
+      >
+        <table class="table mb-0 table-striped">
+          <thead>
+            <tr class="sticky-top">
+              <th scope="col">Title</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              v-for="offer in offers"
+              :key="offer.id"
+              :class="{ 'table-active': selectedOffer === offer }"
+              @click="setSelectedOffer(offer)"
+            >
+              <td>{{ offer.title }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="d-flex justify-content-end p-0 mb-3">
+        <button class="btn btn-primary" @click="onNewOffer()">New Offer</button>
+      </div>
     </div>
-    <div class="d-flex justify-content-end p-0 mb-3">
-      <button class="btn btn-primary" @click="onNewOffer()">New Offer</button>
+    <div class="w-75 mt-5 d-flex align-items-center">
+      <p v-if="selectedOffer === null">Select an offer at the left</p>
+      <app-offers-detail v-else :offer="selectedOffer"></app-offers-detail>
     </div>
   </div>
 </template>
 
 <script>
 import { Offer } from "@/models/offer";
+import OffersDetail32 from "@/components/offers/OffersDetail32.vue";
 
 export default {
   name: "OffersOverview32",
+  components: { "app-offers-detail": OffersDetail32 },
   data() {
     return {
+      offerId: 30000,
       offers: [],
+      selectedOffer: null,
     };
   },
   methods: {
@@ -47,7 +62,6 @@ export default {
 
       return newOffer;
     },
-
     onNewOffer() {
       this.offers.push(this.createNewOffer());
 
@@ -55,6 +69,19 @@ export default {
       this.$nextTick(() => {
         this.$refs.tableDiv.scrollTop = this.$refs.tableDiv.scrollHeight;
       });
+    },
+
+    /**
+     *set the selected offer to the offer which was clicked on by the user.
+     * @param offer
+     */
+    setSelectedOffer(offer) {
+      if (offer === this.selectedOffer) {
+        this.selectedOffer = null;
+        return;
+      }
+      this.selectedOffer = offer;
+      console.log(offer);
     },
   },
   created() {
@@ -67,4 +94,16 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.table-container {
+  max-height: 50vh;
+}
+
+td {
+  cursor: pointer;
+}
+
+.table-active {
+  --bs-table-active-bg: var(--bs-primary-bg-subtle);
+}
+</style>
