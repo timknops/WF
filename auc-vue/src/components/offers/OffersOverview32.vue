@@ -30,7 +30,10 @@
     </div>
     <div class="w-75 mt-5 d-flex align-items-center">
       <p v-if="selectedOffer === null">Select an offer at the left</p>
-      <app-offers-detail v-else :offer="selectedOffer"></app-offers-detail>
+      <app-offers-detail
+        v-else
+        :selected-offer="selectedOffer"
+      ></app-offers-detail>
     </div>
   </div>
 </template>
@@ -51,16 +54,7 @@ export default {
   },
   methods: {
     createNewOffer() {
-      let newOffer = Offer.createSampleOffer((this.offerId += 3));
-
-      newOffer.sellDate = newOffer.sellDate.toLocaleDateString("en-IN", {
-        weekday: "long",
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-      });
-
-      return newOffer;
+      return Offer.createSampleOffer((this.offerId += 3));
     },
     onNewOffer() {
       this.offers.push(this.createNewOffer());
@@ -70,18 +64,12 @@ export default {
         this.$refs.tableDiv.scrollTop = this.$refs.tableDiv.scrollHeight;
       });
     },
-
-    /**
-     *set the selected offer to the offer which was clicked on by the user.
-     * @param offer
-     */
     setSelectedOffer(offer) {
       if (offer === this.selectedOffer) {
         this.selectedOffer = null;
         return;
       }
       this.selectedOffer = offer;
-      console.log(offer);
     },
   },
   created() {
