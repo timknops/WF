@@ -28,7 +28,7 @@
         <button class="btn btn-primary" @click="onNewOffer()">New Offer</button>
       </div>
     </div>
-    <div class="w-75 mt-5">
+    <div class="w-75 mt-5 pt-2">
       <div
         v-if="selectedOffer === null"
         class="h-100 d-flex align-items-center"
@@ -38,6 +38,7 @@
       <app-offers-detail
         v-else
         :selected-offer="selectedOffer"
+        @delete-offer="deleteOffer"
       ></app-offers-detail>
     </div>
   </div>
@@ -61,6 +62,7 @@ export default {
     createNewOffer() {
       return Offer.createSampleOffer((this.offerId += 3));
     },
+
     onNewOffer() {
       this.offers.push(this.createNewOffer());
 
@@ -71,12 +73,18 @@ export default {
 
       this.selectedOffer = this.offers[this.offers.length - 1];
     },
+
     setSelectedOffer(offer) {
       if (offer === this.selectedOffer) {
         this.selectedOffer = null;
         return;
       }
       this.selectedOffer = offer;
+    },
+
+    deleteOffer(offerToBeDeleted) {
+      this.offers = this.offers.filter((offer) => offer !== offerToBeDeleted); // Remove the item from the array of offers.
+      this.selectedOffer = null;
     },
   },
   created() {

@@ -1,7 +1,7 @@
 <!-- eslint-disable vue/no-mutating-props -->
 <template>
   <div>
-    <div class="rounded-3 px-0 mb-3 mt-1 border overflow-hidden w-100">
+    <div class="rounded-3 px-0 mb-3 border overflow-hidden w-100">
       <table class="table mb-0 table-striped">
         <thead class="text-center">
           <tr class="sticky-top">
@@ -66,7 +66,12 @@
       </table>
     </div>
     <div class="d-flex justify-content-end p-0 mb-3">
-      <button class="btn btn-primary">Delete</button>
+      <button
+        class="btn btn-primary"
+        @click="$emit('deleteOffer', selectedOffer)"
+      >
+        Delete
+      </button>
     </div>
   </div>
 </template>
