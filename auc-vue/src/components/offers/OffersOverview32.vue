@@ -1,12 +1,12 @@
 <template>
-  <div class="container-fluid d-flex">
+  <div class="container d-flex mt-5">
     <div class="w-25 mx-5">
-      <h2 class="mt-5 p-0 fw-bold text-primary">List of all offers</h2>
+      <h2 class="p-0 fw-bold text-primary">List of all offers</h2>
       <div
         class="rounded-3 my-3 px-0 border overflow-x-hidden overflow-y-scroll table-container"
         ref="tableDiv"
       >
-        <table class="table mb-0 table-striped">
+        <table class="table mb-0 table-striped text-center">
           <thead>
             <tr class="sticky-top">
               <th scope="col">Title</th>
@@ -28,8 +28,13 @@
         <button class="btn btn-primary" @click="onNewOffer()">New Offer</button>
       </div>
     </div>
-    <div class="w-75 mt-5 d-flex align-items-center">
-      <p v-if="selectedOffer === null">Select an offer at the left</p>
+    <div class="w-75 mt-5">
+      <div
+        v-if="selectedOffer === null"
+        class="h-100 d-flex align-items-center"
+      >
+        <p>Select an offer at the left</p>
+      </div>
       <app-offers-detail
         v-else
         :selected-offer="selectedOffer"
@@ -63,6 +68,8 @@ export default {
       this.$nextTick(() => {
         this.$refs.tableDiv.scrollTop = this.$refs.tableDiv.scrollHeight;
       });
+
+      this.selectedOffer = this.offers[this.offers.length - 1];
     },
     setSelectedOffer(offer) {
       if (offer === this.selectedOffer) {
