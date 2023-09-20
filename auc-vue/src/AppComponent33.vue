@@ -1,18 +1,16 @@
 <template>
   <HeaderComponent />
   <NavBar />
-  <offers-overview32 />
+  <router-view />
 </template>
 
 <script>
 import HeaderComponent from "./components/HeaderComponent.vue";
 import NavBar from "@/components/NavBar.vue";
-import OffersOverview32 from "@/components/offers/OffersOverview32.vue";
 
 export default {
-  name: "App",
+  name: "AppComponent33",
   components: {
-    OffersOverview32,
     NavBar,
     HeaderComponent,
   },
