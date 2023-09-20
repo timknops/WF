@@ -17,11 +17,16 @@
         id="navbarNavDropdown"
       >
         <ul class="navbar-nav">
+          <!-- using a template to make sure i can loop over all links, and create the correct list item in the navbar -->
           <template v-for="item in navItemsLeft" :key="item.link">
             <li class="nav-item" v-if="item.menuItems.length === 0">
-              <a href="#" class="nav-link px-0 me-4 text-dark">{{
-                item.link
-              }}</a>
+              <!-- if there is no href declared redirect to the homepage -->
+              <router-link
+                :to="item.href"
+                active-class="active"
+                class="nav-link px-0 me-4 text-dark"
+                >{{ item.link }}</router-link
+              >
             </li>
             <li class="nav-item dropdown" v-else>
               <a
@@ -64,18 +69,22 @@ export default {
         {
           link: "Home",
           menuItems: [],
+          href: "/home",
         },
         {
           link: "My Offers",
           menuItems: [],
+          href: "/offers/overview31",
         },
         {
           link: "My Bids",
           menuItems: ["Active", "History"],
+          href: null,
         },
         {
           link: "My Account",
           menuItems: [],
+          href: "/account",
         },
       ],
     };
@@ -85,5 +94,9 @@ export default {
 <style scoped>
 .nav-link:hover {
   color: var(--bs-gray-700) !important;
+}
+.nav-link.active {
+  color: var(--bs-primary) !important;
+  font-weight: bold;
 }
 </style>
