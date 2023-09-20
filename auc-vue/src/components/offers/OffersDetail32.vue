@@ -1,6 +1,6 @@
 <!-- eslint-disable vue/no-mutating-props -->
 <template>
-  <div>
+  <form>
     <div class="rounded-3 px-0 mb-3 border overflow-hidden w-100">
       <table class="table mb-0 table-striped">
         <thead class="text-center">
@@ -73,7 +73,7 @@
         Delete
       </button>
     </div>
-  </div>
+  </form>
 </template>
 
 <script>
