@@ -91,13 +91,25 @@ export default {
   },
   methods: {
     formatDateDisplay() {
-      return this.selectedOffer.sellDate.toLocaleDateString("en-IN", {
+      /*because of timezones the displayed time is two hours lower.
+      This is because of the Netherlands is two hours ahead from the greenwich time utc +0
+      therefore the date needs to be offset with the timezone offset
+       */
+      const MILLISECONDS_IN_MINUTE = 60000;
+      const timeOffsetInMilliseconds =
+        this.selectedOffer.sellDate.getTime() +
+        this.selectedOffer.sellDate.getTimezoneOffset() *
+          MILLISECONDS_IN_MINUTE;
+      const dateWithOffset = new Date(timeOffsetInMilliseconds);
+
+      return dateWithOffset.toLocaleDateString("en-IN", {
         weekday: "long",
         year: "numeric",
         month: "long",
         day: "numeric",
         hour: "2-digit",
         minute: "2-digit",
+        hour12: false,
       });
     },
   },
