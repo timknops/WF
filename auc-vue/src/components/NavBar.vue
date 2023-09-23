@@ -39,8 +39,10 @@
                 {{ item.link }}
               </a>
               <ul class="dropdown-menu">
-                <li v-for="menuItem in item.menuItems" :key="menuItem">
-                  <a href="#" class="dropdown-item"> {{ menuItem }}</a>
+                <li v-for="menuItem in item.menuItems" :key="menuItem.link">
+                  <router-link :to="menuItem.href" class="dropdown-item">
+                    {{ menuItem.link }}</router-link
+                  >
                 </li>
               </ul>
             </li>
@@ -82,7 +84,10 @@ export default {
         },
         {
           link: "My Bids",
-          menuItems: ["Active", "History"],
+          menuItems: [
+            { link: "Active", href: "/myBids/active" },
+            { link: "History", href: "/myBids/history" },
+          ],
           href: null,
         },
         {
