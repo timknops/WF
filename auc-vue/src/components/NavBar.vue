@@ -40,7 +40,9 @@
               </a>
               <ul class="dropdown-menu">
                 <li v-for="menuItem in item.menuItems" :key="menuItem">
-                  <a href="#" class="dropdown-item"> {{ menuItem }}</a>
+                  <router-link class="dropdown-item" to="#">
+                    {{ menuItem }}</router-link
+                  >
                 </li>
               </ul>
             </li>
@@ -76,9 +78,13 @@ export default {
           href: "/home",
         },
         {
-          link: "My Offers",
-          menuItems: [],
-          href: "/offers/overview31",
+          link: "Offers",
+          menuItems: [
+            { name: "All offers overview", href: "/offers/overview31" },
+            { name: "Offers detail (comp)", href: "/offers/overview32" },
+            { name: "Offers edit (router)", href: "/offers/overview33" },
+          ],
+          href: null,
         },
         {
           link: "My Bids",
