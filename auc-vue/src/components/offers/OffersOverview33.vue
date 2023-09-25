@@ -17,7 +17,7 @@
               v-for="offer in offers"
               :key="offer.id"
               :class="{ 'table-active': selectedOffer === offer }"
-              @click="setSelectedOffer(offer)"
+              @click="onSelect(offer)"
             >
               <td>{{ offer.title }}</td>
             </tr>
@@ -35,22 +35,16 @@
       >
         <p>Select an offer at the left</p>
       </div>
-      <app-offers-detail
-        v-else
-        :selected-offer="selectedOffer"
-        @delete-offer="deleteOffer"
-      ></app-offers-detail>
+      <router-view v-else :selectedOffer="selectedOffer" />
     </div>
   </div>
 </template>
 
 <script>
 import { Offer } from "@/models/offer";
-import OffersDetail32 from "@/components/offers/OffersDetail32.vue";
 
 export default {
   name: "OffersOverview33",
-  components: { "app-offers-detail": OffersDetail32 },
   data() {
     return {
       offerId: 30000,
@@ -79,12 +73,23 @@ export default {
         this.selectedOffer = null;
         return;
       }
+
       this.selectedOffer = offer;
     },
 
     deleteOffer(offerToBeDeleted) {
       this.offers = this.offers.filter((offer) => offer !== offerToBeDeleted); // Remove the item from the array of offers.
       this.selectedOffer = null;
+    },
+
+    onSelect(offer) {
+      if (offer !== null && offer !== this.selectedOffer) {
+        this.$router.push(this.$route.matched[0].path + "/" + offer.id);
+      } else if (this.selectedOffer !== null) {
+        this.$router.back();
+      }
+
+      this.setSelectedOffer(offer);
     },
   },
   created() {
@@ -93,6 +98,11 @@ export default {
     for (let i = 0; i < OFFER_LIST_LENGTH; i++) {
       this.offers.push(this.createNewOffer());
     }
+  },
+  watch: {
+    $router() {
+      this.selectedOffer = this.$route.params.id;
+    },
   },
 };
 </script>

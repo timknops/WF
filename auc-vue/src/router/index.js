@@ -4,13 +4,18 @@ import OffersOverview31 from "@/components/offers/OffersOverview31.vue";
 import OffersOverview32 from "@/components/offers/OffersOverview32.vue";
 import UnknownRoute from "@/components/UnknownRoute.vue";
 import OffersOverview33 from "@/components/offers/OffersOverview33.vue";
+import OffersDetail32 from "@/components/offers/OffersDetail32.vue";
 
 const routes = [
   { path: "/", component: WelcomeComponent },
   { path: "/home", component: WelcomeComponent },
   { path: "/offers/overview31", component: OffersOverview31 },
   { path: "/offers/overview32", component: OffersOverview32 },
-  { path: "/offers/overview33", component: OffersOverview33 },
+  {
+    path: "/offers/overview33",
+    component: OffersOverview33,
+    children: [{ path: ":id", component: OffersDetail32, props: true }],
+  },
   { path: "/:pregMatch(.*)", component: UnknownRoute },
 ];
 
