@@ -39,9 +39,9 @@
                 {{ item.link }}
               </a>
               <ul class="dropdown-menu">
-                <li v-for="menuItem in item.menuItems" :key="menuItem">
-                  <router-link class="dropdown-item" to="#">
-                    {{ menuItem }}</router-link
+                <li v-for="menuItem in item.menuItems" :key="menuItem.link">
+                  <router-link :to="menuItem.href" class="dropdown-item">
+                    {{ menuItem.link }}</router-link
                   >
                 </li>
               </ul>
@@ -78,17 +78,20 @@ export default {
           href: "/home",
         },
         {
-          link: "Offers",
+          link: "My Offers",
           menuItems: [
-            { name: "All offers overview", href: "/offers/overview31" },
-            { name: "Offers detail (comp)", href: "/offers/overview32" },
-            { name: "Offers edit (router)", href: "/offers/overview33" },
+            { link: "All offers overview", href: "/offers/overview31" },
+            { link: "Offers detail (comp)", href: "/offers/overview32" },
+            { link: "Offers edit (router)", href: "/offers/overview33" },
           ],
           href: null,
         },
         {
           link: "My Bids",
-          menuItems: ["Active", "History"],
+          menuItems: [
+            { link: "Active", href: "/myBids/active" },
+            { link: "History", href: "/myBids/history" },
+          ],
           href: null,
         },
         {
@@ -101,6 +104,7 @@ export default {
   },
 };
 </script>
+
 <style scoped>
 .nav-link:hover {
   color: var(--bs-gray-700) !important;
