@@ -14,7 +14,7 @@ const routes = [
   {
     path: "/offers/overview33",
     component: OffersOverview33,
-    children: [{ path: ":id", component: OffersDetail32, props: true }],
+    children: [{ path: ":id", component: OffersDetail32 }],
   },
   { path: "/:pregMatch(.*)", component: UnknownRoute },
 ];

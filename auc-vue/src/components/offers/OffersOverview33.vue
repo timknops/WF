@@ -17,7 +17,7 @@
               v-for="offer in offers"
               :key="offer.id"
               :class="{ 'table-active': selectedOffer === offer }"
-              @click="onSelect(offer)"
+              @click="setSelectedOffer(offer)"
             >
               <td>{{ offer.title }}</td>
             </tr>
@@ -35,7 +35,11 @@
       >
         <p>Select an offer at the left</p>
       </div>
-      <router-view v-else :selectedOffer="selectedOffer" />
+      <router-view
+        v-else
+        :selectedOffer="selectedOffer"
+        @delete-offer="deleteOffer"
+      />
     </div>
   </div>
 </template>
@@ -82,14 +86,9 @@ export default {
       this.selectedOffer = null;
     },
 
-    onSelect(offer) {
-      if (offer !== null && offer !== this.selectedOffer) {
-        this.$router.push(this.$route.matched[0].path + "/" + offer.id);
-      } else if (this.selectedOffer !== null) {
-        this.$router.back();
-      }
-
-      this.setSelectedOffer(offer);
+    findOfferById(id) {
+      // The id parameter must be of type integer!
+      return this.offers.find((offer) => offer.id === id);
     },
   },
   created() {
@@ -100,8 +99,18 @@ export default {
     }
   },
   watch: {
-    $router() {
-      this.selectedOffer = this.$route.params.id;
+    $route() {
+      this.selectedOffer = this.findOfferById(parseInt(this.$route.params.id));
+    },
+
+    selectedOffer() {
+      if (this.selectedOffer === null || this.selectedOffer === undefined) {
+        this.$router.push(this.$route.matched[0].path);
+      } else {
+        this.$router.push(
+          this.$route.matched[0].path + "/" + this.selectedOffer.id
+        );
+      }
     },
   },
 };
