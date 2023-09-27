@@ -7,7 +7,7 @@ import OffersOverview33 from "@/components/offers/OffersOverview33.vue";
 import OffersDetail32 from "@/components/offers/OffersDetail32.vue";
 
 const routes = [
-  { path: "/", component: WelcomeComponent },
+  { path: "/", redirect: "/home" },
   { path: "/home", component: WelcomeComponent },
   { path: "/offers/overview31", component: OffersOverview31 },
   { path: "/offers/overview32", component: OffersOverview32 },
