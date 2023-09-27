@@ -70,20 +70,28 @@ export default {
       });
 
       this.selectedOffer = this.offers[this.offers.length - 1];
+      this.$router.push(
+        this.$route.matched[0].path + "/" + this.selectedOffer.id
+      );
     },
 
     setSelectedOffer(offer) {
       if (offer === this.selectedOffer) {
         this.selectedOffer = null;
+        this.$router.push(this.$route.matched[0].path);
         return;
       }
 
       this.selectedOffer = offer;
+      this.$router.push(
+        this.$route.matched[0].path + "/" + this.selectedOffer.id
+      );
     },
 
     deleteOffer(offerToBeDeleted) {
       this.offers = this.offers.filter((offer) => offer !== offerToBeDeleted); // Remove the item from the array of offers.
       this.selectedOffer = null;
+      this.$router.push(this.$route.matched[0].path);
     },
 
     findOfferById(id) {
@@ -101,16 +109,6 @@ export default {
   watch: {
     $route() {
       this.selectedOffer = this.findOfferById(parseInt(this.$route.params.id));
-    },
-
-    selectedOffer() {
-      if (this.selectedOffer === null || this.selectedOffer === undefined) {
-        this.$router.push(this.$route.matched[0].path);
-      } else {
-        this.$router.push(
-          this.$route.matched[0].path + "/" + this.selectedOffer.id
-        );
-      }
     },
   },
 };
