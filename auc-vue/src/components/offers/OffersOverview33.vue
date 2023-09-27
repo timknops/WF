@@ -82,6 +82,7 @@ export default {
         this.$router.push(this.$route.matched[0].path);
         return;
       }
+
       //if the offer exist add the id to the param
       if (offer != null) {
         this.selectedOffer = offer;
