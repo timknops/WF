@@ -32,6 +32,21 @@ export class Offer {
     this.valueHighestBid = valueHighestBid;
   }
 
+  /**
+   * Make a copy of an offer class
+   * @param {Offer} offer the offer class to be deep cloned
+   * @return {Offer || null}
+   */
+  static copyConstructor(offer) {
+    if (offer == null) return null;
+
+    const copy = Object.assign(new Offer(), offer);
+
+    //Clone the complex datatypes in offer like date
+    copy.sellDate = new Date(offer.sellDate);
+    return copy;
+  }
+
   static createSampleOffer(id) {
     const RANDOM_TITLES = [
       "Lamp",
