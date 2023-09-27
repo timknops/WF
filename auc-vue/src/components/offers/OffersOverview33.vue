@@ -30,7 +30,7 @@
     </div>
     <div class="w-75 mt-5 pt-2">
       <div
-        v-if="selectedOffer === null"
+        v-if="selectedOffer === null || selectedOffer === undefined"
         class="h-100 d-flex align-items-center"
       >
         <p>Select an offer at the left</p>
@@ -76,16 +76,19 @@ export default {
     },
 
     setSelectedOffer(offer) {
+      //return to main screen when offer is deselected
       if (offer === this.selectedOffer) {
         this.selectedOffer = null;
         this.$router.push(this.$route.matched[0].path);
         return;
       }
-
-      this.selectedOffer = offer;
-      this.$router.push(
-        this.$route.matched[0].path + "/" + this.selectedOffer.id
-      );
+      //if the offer exist add the id to the param
+      if (offer != null) {
+        this.selectedOffer = offer;
+        this.$router.push(
+          this.$route.matched[0].path + "/" + this.selectedOffer.id
+        );
+      }
     },
 
     deleteOffer(offerToBeDeleted) {
@@ -109,6 +112,11 @@ export default {
   watch: {
     $route() {
       this.selectedOffer = this.findOfferById(parseInt(this.$route.params.id));
+
+      //if the offer doesn't exist remove the id from the url
+      if (this.selectedOffer === undefined) {
+        this.$router.push(this.$route.matched[0].path);
+      }
     },
   },
 };
