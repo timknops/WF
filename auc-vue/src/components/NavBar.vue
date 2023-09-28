@@ -40,7 +40,11 @@
               </a>
               <ul class="dropdown-menu">
                 <li v-for="menuItem in item.menuItems" :key="menuItem.link">
-                  <router-link :to="menuItem.href" class="dropdown-item">
+                  <router-link
+                    :to="menuItem.href"
+                    active-class="active"
+                    class="dropdown-item"
+                  >
                     {{ menuItem.link }}</router-link
                   >
                 </li>
