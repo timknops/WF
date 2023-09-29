@@ -72,8 +72,10 @@
       </button>
       <button class="btn btn-primary" @click="clearInputs">Clear</button>
       <button class="btn btn-primary" @click="resetChanges">Reset</button>
-      <button class="btn btn-primary">Cancel</button>
-      <button class="btn btn-success">Save</button>
+      <button class="btn btn-primary" @click="cancel">Cancel</button>
+      <button class="btn btn-success" @click="$emit('updateOffer', offerCopy)">
+        Save
+      </button>
     </div>
   </form>
 </template>
@@ -110,6 +112,10 @@ export default {
      */
     resetChanges() {
       this.offerCopy = Offer.copyConstructor(this.selectedOffer);
+    },
+
+    cancel() {
+      this.$router.push(this.$route.matched[0].path);
     },
 
     formatDateDisplay() {
