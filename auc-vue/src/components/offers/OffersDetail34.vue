@@ -6,7 +6,7 @@
         <thead class="text-center">
           <tr class="sticky-top">
             <th colspan="2" scope="col">
-              Offer Details ID: {{ selectedOffer.id }}
+              Offer Details ID: {{ offerCopy.id }}
             </th>
           </tr>
         </thead>
@@ -17,7 +17,7 @@
               <input
                 class="form-control"
                 type="text"
-                v-model="selectedOffer.title"
+                v-model="offerCopy.title"
               />
             </td>
           </tr>
@@ -27,14 +27,14 @@
               <input
                 type="text"
                 class="form-control"
-                v-model="selectedOffer.description"
+                v-model="offerCopy.description"
               />
             </td>
           </tr>
           <tr>
             <th scope="row">Status</th>
             <td>
-              <select class="form-select" v-model="selectedOffer.status">
+              <select class="form-select" v-model="offerCopy.status">
                 <option v-for="status in statusOptions" :key="status">
                   {{ status }}
                 </option>
@@ -57,7 +57,7 @@
             <td>
               <input
                 type="text"
-                v-model="selectedOffer.valueHighestBid"
+                v-model="offerCopy.valueHighestBid"
                 class="form-control"
               />
             </td>
@@ -66,10 +66,7 @@
       </table>
     </div>
     <div class="d-flex justify-content-end p-0 mb-3">
-      <button
-        class="btn btn-primary"
-        @click="$emit('deleteOffer', selectedOffer)"
-      >
+      <button class="btn btn-primary" @click="$emit('deleteOffer', offerCopy)">
         Delete
       </button>
     </div>
@@ -87,6 +84,7 @@ export default {
   data() {
     return {
       statusOptions: Object.values(Offer.Status),
+      offerCopy: Offer,
     };
   },
   methods: {
@@ -97,9 +95,8 @@ export default {
        */
       const MILLISECONDS_IN_MINUTE = 60000;
       const timeOffsetInMilliseconds =
-        this.selectedOffer.sellDate.getTime() +
-        this.selectedOffer.sellDate.getTimezoneOffset() *
-          MILLISECONDS_IN_MINUTE;
+        this.offerCopy.sellDate.getTime() +
+        this.offerCopy.sellDate.getTimezoneOffset() * MILLISECONDS_IN_MINUTE;
       const dateWithOffset = new Date(timeOffsetInMilliseconds);
 
       return dateWithOffset.toLocaleDateString("en-IN", {
@@ -116,11 +113,19 @@ export default {
   computed: {
     sellDateUpdater: {
       get() {
-        return new Date(this.selectedOffer.sellDate).toISOString().slice(0, -8);
+        return new Date(this.offerCopy.sellDate).toISOString().slice(0, -8);
       },
       set(date) {
-        this.selectedOffer.sellDate = new Date(date);
+        this.offerCopy.sellDate = new Date(date);
       },
+    },
+  },
+  created() {
+    this.offerCopy = Offer.copyConstructor(this.selectedOffer);
+  },
+  watch: {
+    selectedOffer() {
+      this.offerCopy = Offer.copyConstructor(this.selectedOffer);
     },
   },
 };
