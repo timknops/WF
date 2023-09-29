@@ -67,13 +67,27 @@
       </table>
     </div>
     <div class="d-flex justify-content-end column-gap-3 p-0 mb-3">
-      <button class="btn btn-danger" @click="$emit('deleteOffer', offerCopy)">
+      <button
+        class="btn btn-danger"
+        :disabled="hasChanged"
+        @click="$emit('deleteOffer', offerCopy)"
+      >
         Delete
       </button>
       <button class="btn btn-primary" @click="clearInputs">Clear</button>
-      <button class="btn btn-primary" @click="resetChanges">Reset</button>
+      <button
+        class="btn btn-primary"
+        :disabled="!hasChanged"
+        @click="resetChanges"
+      >
+        Reset
+      </button>
       <button class="btn btn-primary" @click="cancel">Cancel</button>
-      <button class="btn btn-success" @click="$emit('updateOffer', offerCopy)">
+      <button
+        class="btn btn-success"
+        :disabled="!hasChanged"
+        @click="$emit('updateOffer', offerCopy)"
+      >
         Save
       </button>
     </div>
@@ -147,6 +161,10 @@ export default {
   },
 
   computed: {
+    hasChanged() {
+      return !this.offerCopy.equals(this.selectedOffer);
+    },
+
     sellDateUpdater: {
       get() {
         return new Date(this.offerCopy.sellDate).toISOString().slice(0, -8);
