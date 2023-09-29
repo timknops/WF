@@ -48,6 +48,7 @@
                 class="form-control"
                 type="datetime-local"
                 v-model="sellDateUpdater"
+                ref="dateInput"
               />
               {{ formatDateDisplay() }}
             </td>
@@ -65,10 +66,14 @@
         </tbody>
       </table>
     </div>
-    <div class="d-flex justify-content-end p-0 mb-3">
-      <button class="btn btn-primary" @click="$emit('deleteOffer', offerCopy)">
+    <div class="d-flex justify-content-end column-gap-3 p-0 mb-3">
+      <button class="btn btn-danger" @click="$emit('deleteOffer', offerCopy)">
         Delete
       </button>
+      <button class="btn btn-primary" @click="clearInputs">Clear</button>
+      <button class="btn btn-primary">Reset</button>
+      <button class="btn btn-primary">Cancel</button>
+      <button class="btn btn-success">Save</button>
     </div>
   </form>
 </template>
@@ -88,7 +93,24 @@ export default {
     };
   },
   methods: {
+    /**
+     * clear all inputs of the form
+     */
+    clearInputs() {
+      this.offerCopy.title = "";
+      this.offerCopy.description = "";
+      this.offerCopy.status = "";
+      this.offerCopy.sellDate = null;
+      this.$refs.dateInput.value = "";
+      this.offerCopy.valueHighestBid = 0;
+    },
+
     formatDateDisplay() {
+      // chrome and other browsers can default to the epoch date, when deleting its value.
+      if (this.offerCopy.sellDate == null) {
+        return "Currently no date is selected. Browser can default january first 1970";
+      }
+
       /*because of timezones the displayed time is two hours lower.
       This is because of the Netherlands is two hours ahead from the greenwich time utc +0
       therefore the date needs to be offset with the timezone offset
@@ -110,6 +132,7 @@ export default {
       });
     },
   },
+
   computed: {
     sellDateUpdater: {
       get() {
@@ -120,9 +143,11 @@ export default {
       },
     },
   },
+
   created() {
     this.offerCopy = Offer.copyConstructor(this.selectedOffer);
   },
+
   watch: {
     selectedOffer() {
       this.offerCopy = Offer.copyConstructor(this.selectedOffer);
