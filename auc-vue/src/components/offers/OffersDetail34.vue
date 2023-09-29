@@ -71,7 +71,7 @@
         Delete
       </button>
       <button class="btn btn-primary" @click="clearInputs">Clear</button>
-      <button class="btn btn-primary">Reset</button>
+      <button class="btn btn-primary" @click="resetChanges">Reset</button>
       <button class="btn btn-primary">Cancel</button>
       <button class="btn btn-success">Save</button>
     </div>
@@ -103,6 +103,13 @@ export default {
       this.offerCopy.sellDate = null;
       this.$refs.dateInput.value = "";
       this.offerCopy.valueHighestBid = 0;
+    },
+
+    /**
+     * reset all changes made to the current offer
+     */
+    resetChanges() {
+      this.offerCopy = Offer.copyConstructor(this.selectedOffer);
     },
 
     formatDateDisplay() {
