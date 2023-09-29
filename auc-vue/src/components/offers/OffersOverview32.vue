@@ -105,6 +105,9 @@ export default {
 td {
   cursor: pointer;
 }
+.sticky-top {
+  z-index: 1;
+}
 
 .table-active {
   --bs-table-active-bg: var(--bs-primary-bg-subtle);

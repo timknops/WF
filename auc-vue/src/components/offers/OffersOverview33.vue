@@ -146,6 +146,10 @@ export default {
   max-height: 50vh;
 }
 
+.sticky-top {
+  z-index: 1;
+}
+
 td {
   cursor: pointer;
 }
