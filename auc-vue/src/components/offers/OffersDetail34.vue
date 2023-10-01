@@ -92,13 +92,18 @@
       </button>
     </div>
   </form>
+  <Transition name="fade">
+    <ModalComponent v-if="showModal" ref="modal" />
+  </Transition>
 </template>
 
 <script>
 import { Offer } from "@/models/offer";
+import ModalComponent from "@/components/ModalComponent.vue";
 
 export default {
   name: "OffersDetail34",
+  components: { ModalComponent },
   props: {
     selectedOffer: Offer,
   },
@@ -106,6 +111,7 @@ export default {
     return {
       statusOptions: Object.values(Offer.Status),
       offerCopy: Offer,
+      showModal: false,
     };
   },
   methods: {
@@ -129,7 +135,11 @@ export default {
     },
 
     cancel() {
-      this.$router.push(this.$route.matched[0].path);
+      if (this.hasChanged) {
+        this.showModal = true;
+      }
+
+      // this.$router.push(this.$route.matched[0].path);
     },
 
     formatDateDisplay() {
@@ -190,5 +200,15 @@ export default {
 <style scoped>
 tbody {
   vertical-align: middle !important;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.2s ease-in-out;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>
