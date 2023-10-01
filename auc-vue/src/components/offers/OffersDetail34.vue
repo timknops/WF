@@ -74,7 +74,9 @@
       >
         Delete
       </button>
-      <button class="btn btn-primary" @click="clearInputs">Clear</button>
+      <button class="btn btn-primary" type="reset" @click="clearOffer">
+        Clear
+      </button>
       <button
         class="btn btn-primary"
         :disabled="!hasChanged"
@@ -112,12 +114,11 @@ export default {
     /**
      * clear all inputs of the form
      */
-    clearInputs() {
+    clearOffer() {
       this.offerCopy.title = "";
       this.offerCopy.description = "";
       this.offerCopy.status = "";
       this.offerCopy.sellDate = null;
-      this.$refs.dateInput.value = "";
       this.offerCopy.valueHighestBid = 0;
     },
 
@@ -133,10 +134,7 @@ export default {
     },
 
     formatDateDisplay() {
-      // chrome and other browsers can default to the epoch date, when deleting its value.
-      if (this.offerCopy.sellDate == null) {
-        return "Currently no date is selected. Browser can default january first 1970";
-      }
+      if (this.offerCopy.sellDate === null) return;
 
       /*because of timezones the displayed time is two hours lower.
       This is because of the Netherlands is two hours ahead from the greenwich time utc +0
