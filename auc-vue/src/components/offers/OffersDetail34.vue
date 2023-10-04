@@ -129,6 +129,9 @@ export default {
       this.offerCopy = Offer.copyConstructor(this.selectedOffer);
     },
 
+    /**
+     * Push the router back to the parent route. This results in the selectedOffer being set to null.
+     */
     cancel() {
       this.$router.push(this.$route.matched[0].path);
     },
