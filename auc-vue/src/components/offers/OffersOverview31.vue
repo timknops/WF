@@ -80,4 +80,8 @@ export default {
 .table-container {
   max-height: 50vh;
 }
+
+.sticky-top {
+  z-index: 1;
+}
 </style>

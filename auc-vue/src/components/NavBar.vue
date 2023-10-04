@@ -87,6 +87,7 @@ export default {
             { link: "All offers overview", href: "/offers/overview31" },
             { link: "Offers detail (comp)", href: "/offers/overview32" },
             { link: "Offers edit (router)", href: "/offers/overview33" },
+            { link: "Offers edit (managed)", href: "/offers/overview34" },
           ],
           href: null,
         },

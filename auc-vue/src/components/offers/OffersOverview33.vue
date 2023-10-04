@@ -37,8 +37,9 @@
       </div>
       <router-view
         v-else
-        :selectedOffer="selectedOffer"
         @delete-offer="deleteOffer"
+        @update-offer="updateOffer"
+        :selectedOffer="selectedOffer"
       />
     </div>
   </div>
@@ -93,7 +94,24 @@ export default {
     },
 
     deleteOffer(offerToBeDeleted) {
-      this.offers = this.offers.filter((offer) => offer !== offerToBeDeleted); // Remove the item from the array of offers.
+      this.offers = this.offers.filter(
+        (offer) => !offer.equals(offerToBeDeleted)
+      ); // Remove the item from the array of offers.
+      this.selectedOffer = null;
+      this.$router.push(this.$route.matched[0].path);
+    },
+
+    /**
+     * update the selected offer with the new changes which were made
+     * @param {Offer} updatedOffer - an offer object with changes
+     */
+    updateOffer(updatedOffer) {
+      //find the index of the offer which is being updated and update the list
+      const index = this.offers.findIndex((offer) => {
+        return offer.id === updatedOffer.id;
+      });
+      this.offers[index] = updatedOffer;
+
       this.selectedOffer = null;
       this.$router.push(this.$route.matched[0].path);
     },
@@ -126,6 +144,10 @@ export default {
 <style scoped>
 .table-container {
   max-height: 50vh;
+}
+
+.sticky-top {
+  z-index: 1;
 }
 
 td {

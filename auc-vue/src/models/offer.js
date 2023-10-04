@@ -35,7 +35,7 @@ export class Offer {
   /**
    * Make a copy of an offer class
    * @param {Offer} offer the offer class to be deep cloned
-   * @return {Offer || null}
+   * @return {Offer}
    */
   static copyConstructor(offer) {
     if (offer == null) return null;
@@ -130,5 +130,22 @@ export class Offer {
    */
   static valueBetween(min, max) {
     return Math.floor(Math.random() * (max - min) + min);
+  }
+
+  /**
+   * Check if to offers are the same
+   * @param {Offer} other offer to compare this with.
+   * @return {boolean} true if equal false if objects are not equal
+   */
+  equals(other) {
+    if (!(other instanceof Offer)) return false;
+    return (
+      this.id === other.id &&
+      this.title === other.title &&
+      this.description === other.description &&
+      this.valueHighestBid === other.valueHighestBid &&
+      this.status === other.status &&
+      this.sellDate?.getTime() === other.sellDate?.getTime() //check if date are the same by comparing the time in milliseconds
+    );
   }
 }
