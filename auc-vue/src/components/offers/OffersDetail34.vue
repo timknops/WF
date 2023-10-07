@@ -93,7 +93,7 @@
     </div>
   </form>
   <Transition name="fade">
-    <ModalComponent v-if="showModal" ref="modal" />
+    <ModalComponent v-if="showModal" :title="modalTitle" :text="modalText" />
   </Transition>
 </template>
 
@@ -112,6 +112,8 @@ export default {
       statusOptions: Object.values(Offer.Status),
       offerCopy: Offer,
       showModal: false,
+      modalTitle: "",
+      modalText: "",
     };
   },
   methods: {
@@ -137,9 +139,10 @@ export default {
     cancel() {
       if (this.hasChanged) {
         this.showModal = true;
+        return;
       }
 
-      // this.$router.push(this.$route.matched[0].path);
+      this.$router.push(this.$route.matched[0].path);
     },
 
     formatDateDisplay() {
