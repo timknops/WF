@@ -11,7 +11,7 @@
         <div class="modal-header">
           <h5 class="modal-title">{{ title }}</h5>
           <button
-            @click="$emit('cornerCloseModalBtn', false)"
+            @click="$emit('cornerCloseModalBtn')"
             type="button"
             class="btn-close"
             aria-label="Close"
@@ -20,7 +20,7 @@
         <div class="modal-body">{{ text }}</div>
         <div class="modal-footer">
           <button
-            @click="$emit('cancelModalBtn', false)"
+            @click="$emit('cancelModalBtn')"
             type="button"
             class="btn btn-secondary"
           >

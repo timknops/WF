@@ -74,15 +74,25 @@
       >
         Delete
       </button>
-      <button class="btn btn-primary" @click="clearInputs">Clear</button>
+      <button
+        class="btn btn-primary"
+        @click="handleModal(CLICKED_BUTTON_OPTIONS.CLEAR, 0)"
+      >
+        Clear
+      </button>
       <button
         class="btn btn-primary"
         :disabled="!hasChanged"
-        @click="resetChanges"
+        @click="handleModal(CLICKED_BUTTON_OPTIONS.RESET, 0)"
       >
         Reset
       </button>
-      <button class="btn btn-primary" @click="cancel">Cancel</button>
+      <button
+        class="btn btn-primary"
+        @click="handleModal(CLICKED_BUTTON_OPTIONS.CANCEL, 0)"
+      >
+        Cancel
+      </button>
       <button
         class="btn btn-success"
         :disabled="!hasChanged"
@@ -97,8 +107,8 @@
       v-if="showModal"
       :title="modalTitle"
       :text="modalText"
-      @cancel-modal-btn="cancelBtnModal"
-      @corner-close-modal-btn="cancelBtnModal"
+      @cancel-modal-btn="this.showModal = false"
+      @corner-close-modal-btn="this.showModal = false"
       @ok-modal-btn="continueButtonAction"
     />
   </Transition>
@@ -132,9 +142,19 @@ export default {
     };
   },
   methods: {
-    /**
-     * clear all inputs of the form
-     */
+    handleModal(buttonVersion, textVersion) {
+      this.currentButtonClicked = buttonVersion;
+
+      if (this.hasChanged) {
+        this.setModalParameters(textVersion);
+        this.showModal = true;
+
+        return;
+      }
+
+      this.continueButtonAction();
+    },
+
     clearInputs() {
       this.offerCopy.title = "";
       this.offerCopy.description = "";
@@ -144,50 +164,33 @@ export default {
       this.offerCopy.valueHighestBid = 0;
     },
 
-    cancelBtnModal(showModal) {
-      this.showModal = showModal;
-    },
-
     continueButtonAction() {
-      // if (this.currentButtonClicked === this.CLICKED_BUTTON_OPTIONS.CANCEL) {
-      //   this.$router.push(this.$route.matched[0].path);
-      // } else if {}
-
       switch (this.currentButtonClicked) {
         case this.CLICKED_BUTTON_OPTIONS.CANCEL:
           this.$router.push(this.$route.matched[0].path);
           break;
+
         case this.CLICKED_BUTTON_OPTIONS.CLEAR:
+          this.clearInputs();
+          break;
+
+        case this.CLICKED_BUTTON_OPTIONS.RESET:
+          this.offerCopy = Offer.copyConstructor(this.selectedOffer);
           break;
       }
+
+      this.showModal = false;
     },
 
-    /**
-     * reset all changes made to the current offer
-     */
-    resetChanges() {
-      this.offerCopy = Offer.copyConstructor(this.selectedOffer);
-    },
+    setModalParameters(textVersion) {
+      const MODAL_TEXT = [
+        `Are you sure to discard unchanged changes in ${this.offerCopy.title}?(id=${this.offerCopy.id})`,
+      ];
 
-    setModalParameters(title, text) {
-      this.modalTitle = title;
-      this.modalText = text;
-    },
-
-    cancel() {
-      this.currentButtonClicked = this.CLICKED_BUTTON_OPTIONS.CANCEL;
-
-      if (this.hasChanged) {
-        this.setModalParameters(
-          "Cancel",
-          `Are you sure to discard unchanged changes in ${this.offerCopy.title}?(id=${this.offerCopy.id})`
-        );
-
-        this.showModal = true;
-        return;
-      }
-
-      this.continueButtonAction();
+      this.modalTitle =
+        this.currentButtonClicked.charAt(0) +
+        this.currentButtonClicked.slice(1).toLowerCase();
+      this.modalText = MODAL_TEXT[textVersion];
     },
 
     formatDateDisplay() {
