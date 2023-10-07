@@ -10,12 +10,29 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title">{{ title }}</h5>
-          <button type="button" class="btn-close" aria-label="Close"></button>
+          <button
+            @click="$emit('cornerCloseModalBtn', false)"
+            type="button"
+            class="btn-close"
+            aria-label="Close"
+          ></button>
         </div>
         <div class="modal-body">{{ text }}</div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary">Cancel</button>
-          <button type="button" class="btn btn-primary">OK</button>
+          <button
+            @click="$emit('cancelModalBtn', false)"
+            type="button"
+            class="btn btn-secondary"
+          >
+            Cancel
+          </button>
+          <button
+            @click="$emit('okModalBtn')"
+            type="button"
+            class="btn btn-primary"
+          >
+            OK
+          </button>
         </div>
       </div>
     </div>

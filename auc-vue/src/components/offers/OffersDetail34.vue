@@ -93,7 +93,14 @@
     </div>
   </form>
   <Transition name="fade">
-    <ModalComponent v-if="showModal" :title="modalTitle" :text="modalText" />
+    <ModalComponent
+      v-if="showModal"
+      :title="modalTitle"
+      :text="modalText"
+      @cancel-modal-btn="cancelBtnModal"
+      @corner-close-modal-btn="cancelBtnModal"
+      @ok-modal-btn="continueButtonAction"
+    />
   </Transition>
 </template>
 
@@ -114,6 +121,14 @@ export default {
       showModal: false,
       modalTitle: "",
       modalText: "",
+      currentButtonClicked: "",
+      CLICKED_BUTTON_OPTIONS: Object.freeze({
+        CANCEL: "CANCEL",
+        CLEAR: "CLEAR",
+        RESET: "RESET",
+        SAVE: "SAVE",
+        DELETE: "DELETE",
+      }),
     };
   },
   methods: {
@@ -129,6 +144,24 @@ export default {
       this.offerCopy.valueHighestBid = 0;
     },
 
+    cancelBtnModal(showModal) {
+      this.showModal = showModal;
+    },
+
+    continueButtonAction() {
+      // if (this.currentButtonClicked === this.CLICKED_BUTTON_OPTIONS.CANCEL) {
+      //   this.$router.push(this.$route.matched[0].path);
+      // } else if {}
+
+      switch (this.currentButtonClicked) {
+        case this.CLICKED_BUTTON_OPTIONS.CANCEL:
+          this.$router.push(this.$route.matched[0].path);
+          break;
+        case this.CLICKED_BUTTON_OPTIONS.CLEAR:
+          break;
+      }
+    },
+
     /**
      * reset all changes made to the current offer
      */
@@ -136,13 +169,25 @@ export default {
       this.offerCopy = Offer.copyConstructor(this.selectedOffer);
     },
 
+    setModalParameters(title, text) {
+      this.modalTitle = title;
+      this.modalText = text;
+    },
+
     cancel() {
+      this.currentButtonClicked = this.CLICKED_BUTTON_OPTIONS.CANCEL;
+
       if (this.hasChanged) {
+        this.setModalParameters(
+          "Cancel",
+          `Are you sure to discard unchanged changes in ${this.offerCopy.title}?(id=${this.offerCopy.id})`
+        );
+
         this.showModal = true;
         return;
       }
 
-      this.$router.push(this.$route.matched[0].path);
+      this.continueButtonAction();
     },
 
     formatDateDisplay() {
