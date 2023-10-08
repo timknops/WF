@@ -70,7 +70,7 @@
       <button
         class="btn btn-danger"
         :disabled="hasChanged"
-        @click="$emit('deleteOffer', offerCopy)"
+        @click="handleModal(CLICKED_BUTTON_OPTIONS.DELETE, 1)"
       >
         Delete
       </button>
@@ -136,25 +136,14 @@ export default {
         CANCEL: "CANCEL",
         CLEAR: "CLEAR",
         RESET: "RESET",
-        SAVE: "SAVE",
         DELETE: "DELETE",
+        DISCARD: "DISCARD",
       }),
+      discardNavigateTo: "",
+      leaveValidated: false,
     };
   },
   methods: {
-    handleModal(buttonVersion, textVersion) {
-      this.currentButtonClicked = buttonVersion;
-
-      if (this.hasChanged) {
-        this.setModalParameters(textVersion);
-        this.showModal = true;
-
-        return;
-      }
-
-      this.continueButtonAction();
-    },
-
     clearInputs() {
       this.offerCopy.title = "";
       this.offerCopy.description = "";
@@ -162,6 +151,22 @@ export default {
       this.offerCopy.sellDate = null;
       this.$refs.dateInput.value = "";
       this.offerCopy.valueHighestBid = 0;
+    },
+
+    handleModal(buttonVersion, textVersion) {
+      this.currentButtonClicked = buttonVersion;
+
+      if (
+        this.hasChanged ||
+        this.currentButtonClicked === this.CLICKED_BUTTON_OPTIONS.DELETE
+      ) {
+        this.setModalParameters(textVersion);
+        this.showModal = true;
+
+        return;
+      }
+
+      this.continueButtonAction();
     },
 
     continueButtonAction() {
@@ -177,6 +182,15 @@ export default {
         case this.CLICKED_BUTTON_OPTIONS.RESET:
           this.offerCopy = Offer.copyConstructor(this.selectedOffer);
           break;
+
+        case this.CLICKED_BUTTON_OPTIONS.DELETE:
+          this.$emit("deleteOffer", this.offerCopy);
+          break;
+
+        case this.CLICKED_BUTTON_OPTIONS.DISCARD:
+          this.leaveValidated = true;
+          this.$router.push(this.discardNavigateTo);
+          break;
       }
 
       this.showModal = false;
@@ -184,7 +198,8 @@ export default {
 
     setModalParameters(textVersion) {
       const MODAL_TEXT = [
-        `Are you sure to discard unchanged changes in ${this.offerCopy.title}?(id=${this.offerCopy.id})`,
+        `Are you sure to discard unchanged changes in ${this.offerCopy.title}? (id=${this.offerCopy.id})`,
+        `Are you sure to delete offer ${this.offerCopy.title}? (id=${this.offerCopy.id})`,
       ];
 
       this.modalTitle =
@@ -223,7 +238,7 @@ export default {
 
   computed: {
     hasChanged() {
-      return !this.offerCopy.equals(this.selectedOffer);
+      return !this.selectedOffer.equals(this.offerCopy);
     },
 
     sellDateUpdater: {
@@ -245,6 +260,30 @@ export default {
       this.offerCopy = Offer.copyConstructor(this.selectedOffer);
     },
   },
+
+  beforeRouteUpdate(to, from, next) {
+    if (this.hasChanged) {
+      console.log("Route is about to be updated. New route:", to);
+      console.log("Old route:", from);
+    }
+
+    next();
+  },
+
+  beforeRouteLeave: function (to) {
+    if (this.leaveValidated) {
+      return true;
+    }
+
+    if (this.hasChanged) {
+      this.currentButtonClicked = this.CLICKED_BUTTON_OPTIONS.DISCARD;
+      this.setModalParameters(0);
+      this.showModal = true;
+      this.discardNavigateTo = to.path;
+
+      return false;
+    }
+  }.bind(this),
 };
 </script>
 
