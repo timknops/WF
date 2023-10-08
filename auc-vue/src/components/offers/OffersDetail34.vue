@@ -262,17 +262,24 @@ export default {
   },
 
   beforeRouteUpdate(to, from, next) {
+    console.log(from);
     if (this.hasChanged) {
       console.log("Route is about to be updated. New route:", to);
       console.log("Old route:", from);
+
+      next(false);
+
+      return;
     }
 
     next();
   },
 
-  beforeRouteLeave: function (to) {
+  beforeRouteLeave(to, from, next) {
     if (this.leaveValidated) {
-      return true;
+      next();
+
+      return;
     }
 
     if (this.hasChanged) {
@@ -281,9 +288,9 @@ export default {
       this.showModal = true;
       this.discardNavigateTo = to.path;
 
-      return false;
+      next(false);
     }
-  }.bind(this),
+  },
 };
 </script>
 
