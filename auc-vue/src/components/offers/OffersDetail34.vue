@@ -123,6 +123,7 @@ export default {
   components: { ModalComponent },
   props: {
     selectedOffer: Offer,
+    previousSelectedOffer: Offer,
   },
   data() {
     return {
@@ -139,7 +140,7 @@ export default {
         DELETE: "DELETE",
         DISCARD: "DISCARD",
       }),
-      discardNavigateTo: "",
+      navigateTo: "",
       leaveValidated: false,
     };
   },
@@ -189,7 +190,7 @@ export default {
 
         case this.CLICKED_BUTTON_OPTIONS.DISCARD:
           this.leaveValidated = true;
-          this.$router.push(this.discardNavigateTo);
+          this.$router.push(this.navigateTo);
           break;
       }
 
@@ -262,18 +263,33 @@ export default {
   // },
 
   beforeRouteUpdate(to, from, next) {
-    // this.$emit("stopOfferChange");
-
+    console.log("Previous offer: ", this.previousSelectedOffer);
     console.log("Selected Offer: ", this.selectedOffer);
     console.log("Offer copy: ", this.offerCopy);
-    if (this.hasChanged) {
-      console.log("HELLO");
 
-      console.log("Route is about to be updated. New route:", to);
-      console.log("Old route:", from);
+    if (this.leaveValidated) {
+      next();
+
+      console.log(this.$parent.$parent.findOfferById(parseInt(to.params.id)));
+      this.offerCopy = Offer.copyConstructor(
+        this.$parent.$parent.findOfferById(parseInt(to.params.id))
+      );
+      this.leaveValidated = false;
+
+      return;
+    }
+
+    if (!this.previousSelectedOffer.equals(this.offerCopy)) {
+      this.$emit("replaceSelectedOffer", this.previousSelectedOffer);
+
+      this.currentButtonClicked = this.CLICKED_BUTTON_OPTIONS.DISCARD;
+      this.setModalParameters(0);
+      this.showModal = true;
+      this.navigateTo = to.path;
 
       next(false);
     } else {
+      this.offerCopy = Offer.copyConstructor(this.selectedOffer);
       next();
     }
   },
@@ -289,7 +305,7 @@ export default {
       this.currentButtonClicked = this.CLICKED_BUTTON_OPTIONS.DISCARD;
       this.setModalParameters(0);
       this.showModal = true;
-      this.discardNavigateTo = to.path;
+      this.navigateTo = to.path;
 
       next(false);
     }
