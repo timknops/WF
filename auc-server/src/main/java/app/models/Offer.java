@@ -8,6 +8,8 @@ import java.util.Objects;
 
 /**
  * Modal for an offer
+ *
+ * @author Julian Kruithof
  */
 public class Offer {
     // a list of random offer titles
@@ -108,7 +110,7 @@ public class Offer {
      * @throws IllegalArgumentException info for number class
      * @link <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Number.html">...</a>
      */
-    private static <E extends Number> E valueBetween(E min, E max) {
+    private static <E extends Number> E valueBetween(E min, E max) throws IllegalArgumentException {
         double value = Math.random() * (max.doubleValue() - min.doubleValue()) + min.doubleValue();
 
         // because of the generic the value which is currently a double should be converted to the correct Wrapper class
@@ -191,7 +193,7 @@ public class Offer {
         return Objects.hash(id, title, status, description, sellDate, valueHighestBid);
     }
 
-    //enum of different statuses a offer can have
+    //enum of different statuses an offer can have
     public enum Status {
         NEW,
         FOR_SALE,
