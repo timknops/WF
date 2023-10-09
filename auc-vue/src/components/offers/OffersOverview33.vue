@@ -40,6 +40,7 @@
         @delete-offer="deleteOffer"
         @update-offer="updateOffer"
         :selectedOffer="selectedOffer"
+        @stop-offer-change="this.stopSelectedOfferChange = true"
       />
     </div>
   </div>
@@ -55,6 +56,7 @@ export default {
       offerId: 30000,
       offers: [],
       selectedOffer: null,
+      stopSelectedOfferChange: false,
     };
   },
   methods: {
@@ -77,6 +79,10 @@ export default {
     },
 
     setSelectedOffer(offer) {
+      if (this.stopSelectedOfferChange) {
+        return;
+      }
+
       //return to main screen when offer is deselected
       if (offer === this.selectedOffer) {
         this.selectedOffer = null;

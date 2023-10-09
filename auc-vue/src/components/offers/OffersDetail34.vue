@@ -255,24 +255,27 @@ export default {
     this.offerCopy = Offer.copyConstructor(this.selectedOffer);
   },
 
-  watch: {
-    selectedOffer() {
-      this.offerCopy = Offer.copyConstructor(this.selectedOffer);
-    },
-  },
+  // watch: {
+  //   selectedOffer() {
+  //     this.offerCopy = Offer.copyConstructor(this.selectedOffer);
+  //   },
+  // },
 
   beforeRouteUpdate(to, from, next) {
-    console.log(from);
+    // this.$emit("stopOfferChange");
+
+    console.log("Selected Offer: ", this.selectedOffer);
+    console.log("Offer copy: ", this.offerCopy);
     if (this.hasChanged) {
+      console.log("HELLO");
+
       console.log("Route is about to be updated. New route:", to);
       console.log("Old route:", from);
 
       next(false);
-
-      return;
+    } else {
+      next();
     }
-
-    next();
   },
 
   beforeRouteLeave(to, from, next) {
