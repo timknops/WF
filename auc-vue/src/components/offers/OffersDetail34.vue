@@ -268,13 +268,13 @@ export default {
     console.log("Offer copy: ", this.offerCopy);
 
     if (this.leaveValidated) {
-      next();
-
-      console.log(this.$parent.$parent.findOfferById(parseInt(to.params.id)));
       this.offerCopy = Offer.copyConstructor(
         this.$parent.$parent.findOfferById(parseInt(to.params.id))
       );
+      this.$emit("replaceSelectedOffer", this.offerCopy);
+
       this.leaveValidated = false;
+      next();
 
       return;
     }
