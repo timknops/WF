@@ -40,8 +40,6 @@
         @delete-offer="deleteOffer"
         @update-offer="updateOffer"
         :selectedOffer="selectedOffer"
-        :previousSelectedOffer="previousSelectedOffer"
-        @replace-selected-offer="replaceSelectedOffer"
       />
     </div>
   </div>
@@ -57,8 +55,6 @@ export default {
       offerId: 30000,
       offers: [],
       selectedOffer: null,
-      previousSelectedOffer: null,
-      stopSelectedOfferChange: false,
     };
   },
   methods: {
@@ -95,10 +91,6 @@ export default {
           this.$route.matched[0].path + "/" + this.selectedOffer.id
         );
       }
-    },
-
-    replaceSelectedOffer(offer) {
-      this.selectedOffer = offer;
     },
 
     deleteOffer(offerToBeDeleted) {
@@ -138,7 +130,6 @@ export default {
   },
   watch: {
     $route() {
-      this.previousSelectedOffer = this.selectedOffer;
       this.selectedOffer = this.findOfferById(parseInt(this.$route.params.id));
 
       //if the offer doesn't exist remove the id from the url
