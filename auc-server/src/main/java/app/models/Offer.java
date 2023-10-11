@@ -40,6 +40,7 @@ public class Offer {
     private LocalDateTime sellDate;
     private int valueHighestBid;
 
+
     public Offer(long id) {
         this.id = id;
     }
@@ -47,6 +48,11 @@ public class Offer {
     public Offer(String title) {
         this.title = title;
     }
+
+    /**
+     * Needed for springboot to initialise its own instances of the offer class, by using getters and setters
+     */
+    public Offer() {}
 
     /**
      * create a random sample offer
@@ -180,17 +186,12 @@ public class Offer {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Offer offer = (Offer) o;
-        return id == offer.id &&
-                valueHighestBid == offer.valueHighestBid &&
-                title.equals(offer.title) &&
-                status == offer.status &&
-                description.equals(offer.description) &&
-                sellDate.isEqual(offer.sellDate);
+        return id == offer.id;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, status, description, sellDate, valueHighestBid);
+        return Objects.hash(id);
     }
 
     //enum of different statuses an offer can have
