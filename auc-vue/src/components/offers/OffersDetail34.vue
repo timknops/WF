@@ -4,104 +4,104 @@
     <div class="rounded-3 px-0 mb-3 border overflow-hidden w-100">
       <table class="table mb-0 table-striped">
         <thead class="text-center">
-        <tr class="sticky-top">
-          <th colspan="2" scope="col">
-            Offer Details ID: {{ offerCopy.id }}
-          </th>
-        </tr>
+          <tr class="sticky-top">
+            <th colspan="2" scope="col">
+              Offer Details ID: {{ offerCopy.id }}
+            </th>
+          </tr>
         </thead>
         <tbody class="text-end">
-        <tr>
-          <th scope="row">Title</th>
-          <td>
-            <input
+          <tr>
+            <th scope="row">Title</th>
+            <td>
+              <input
                 class="form-control"
                 type="text"
                 v-model="offerCopy.title"
-            />
-          </td>
-        </tr>
-        <tr>
-          <th scope="row">Description</th>
-          <td>
-            <input
+              />
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">Description</th>
+            <td>
+              <input
                 type="text"
                 class="form-control"
                 v-model="offerCopy.description"
-            />
-          </td>
-        </tr>
-        <tr>
-          <th scope="row">Status</th>
-          <td>
-            <select class="form-select" v-model="offerCopy.status">
-              <option v-for="status in statusOptions" :key="status">
-                {{ status }}
-              </option>
-            </select>
-          </td>
-        </tr>
-        <tr>
-          <th scope="row">Sell Date</th>
-          <td class="d-flex flex-column text-start gap-2">
-            <input
+              />
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">Status</th>
+            <td>
+              <select class="form-select" v-model="offerCopy.status">
+                <option v-for="status in statusOptions" :key="status">
+                  {{ status }}
+                </option>
+              </select>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">Sell Date</th>
+            <td class="d-flex flex-column text-start gap-2">
+              <input
                 class="form-control"
                 type="datetime-local"
                 v-model="sellDateUpdater"
                 ref="dateInput"
-            />
-            {{ formatDateDisplay() }}
-          </td>
-        </tr>
-        <tr>
-          <th scope="row">Highest Bid</th>
-          <td>
-            <input
+              />
+              {{ formatDateDisplay() }}
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">Highest Bid</th>
+            <td>
+              <input
                 type="text"
                 v-model="offerCopy.valueHighestBid"
                 class="form-control"
-            />
-          </td>
-        </tr>
+              />
+            </td>
+          </tr>
         </tbody>
       </table>
     </div>
     <div class="d-flex justify-content-end column-gap-3 p-0 mb-3">
       <button
-          type="button"
-          class="btn btn-danger"
-          :disabled="hasChanged"
-          @click="handleModal(CLICKED_BUTTON_OPTIONS.DELETE, 1)"
+        type="button"
+        class="btn btn-danger"
+        :disabled="hasChanged"
+        @click="handleModal(CLICKED_BUTTON_OPTIONS.DELETE, 1)"
       >
         Delete
       </button>
       <button
-          type="button"
-          class="btn btn-primary"
-          @click="handleModal(CLICKED_BUTTON_OPTIONS.CLEAR, 0)"
+        type="button"
+        class="btn btn-primary"
+        @click="handleModal(CLICKED_BUTTON_OPTIONS.CLEAR, 0)"
       >
         Clear
       </button>
       <button
-          type="reset"
-          class="btn btn-primary"
-          :disabled="!hasChanged"
-          @click="handleModal(CLICKED_BUTTON_OPTIONS.RESET, 0)"
+        type="reset"
+        class="btn btn-primary"
+        :disabled="!hasChanged"
+        @click="handleModal(CLICKED_BUTTON_OPTIONS.RESET, 0)"
       >
         Reset
       </button>
       <button
-          type="button"
-          class="btn btn-primary"
-          @click="handleModal(CLICKED_BUTTON_OPTIONS.CANCEL, 0)"
+        type="button"
+        class="btn btn-primary"
+        @click="handleModal(CLICKED_BUTTON_OPTIONS.CANCEL, 0)"
       >
         Cancel
       </button>
       <button
-          type="button"
-          class="btn btn-success"
-          :disabled="!hasChanged"
-          @click="handleSave()"
+        type="button"
+        class="btn btn-success"
+        :disabled="!hasChanged"
+        @click="handleSave()"
       >
         Save
       </button>
@@ -109,27 +109,27 @@
   </form>
   <Transition name="fade">
     <ModalComponent
-        v-if="showModal"
-        :title="modalTitle"
-        :text="modalText"
-        @cancel-modal-btn="this.showModal = false"
-        @corner-close-modal-btn="this.showModal = false"
-        @ok-modal-btn="continueButtonAction"
+      v-if="showModal"
+      :title="modalTitle"
+      :text="modalText"
+      @cancel-modal-btn="this.showModal = false"
+      @corner-close-modal-btn="this.showModal = false"
+      @ok-modal-btn="continueButtonAction"
     />
   </Transition>
 </template>
 
 <script>
-import {Offer} from "@/models/offer";
+import { Offer } from "@/models/offer";
 import ModalComponent from "@/components/ModalComponent.vue";
 
 export default {
   name: "OffersDetail34",
-  components: {ModalComponent},
+  components: { ModalComponent },
   props: {
     selectedOffer: Offer,
   },
-  emits: ['deleteOffer', 'updateOffer'],
+  emits: ["deleteOffer", "updateOffer"],
   data() {
     return {
       statusOptions: Object.values(Offer.Status),
@@ -151,7 +151,7 @@ export default {
   },
   methods: {
     handleSave() {
-      this.$emit('updateOffer', this.offerCopy)
+      this.$emit("updateOffer", this.offerCopy);
     },
     clearInputs() {
       this.offerCopy.title = "";
@@ -166,8 +166,8 @@ export default {
       this.currentButtonClicked = buttonVersion;
 
       if (
-          this.hasChanged ||
-          this.currentButtonClicked === this.CLICKED_BUTTON_OPTIONS.DELETE
+        this.hasChanged ||
+        this.currentButtonClicked === this.CLICKED_BUTTON_OPTIONS.DELETE
       ) {
         this.setModalParameters(textVersion);
         this.showModal = true;
@@ -213,8 +213,8 @@ export default {
       ];
 
       this.modalTitle =
-          this.currentButtonClicked.charAt(0) +
-          this.currentButtonClicked.slice(1).toLowerCase();
+        this.currentButtonClicked.charAt(0) +
+        this.currentButtonClicked.slice(1).toLowerCase();
       this.modalText = MODAL_TEXT[textVersion];
     },
 
@@ -230,8 +230,8 @@ export default {
        */
       const MILLISECONDS_IN_MINUTE = 60000;
       const timeOffsetInMilliseconds =
-          this.offerCopy.sellDate.getTime() +
-          this.offerCopy.sellDate.getTimezoneOffset() * MILLISECONDS_IN_MINUTE;
+        this.offerCopy.sellDate.getTime() +
+        this.offerCopy.sellDate.getTimezoneOffset() * MILLISECONDS_IN_MINUTE;
       const dateWithOffset = new Date(timeOffsetInMilliseconds);
 
       return dateWithOffset.toLocaleDateString("en-IN", {
@@ -272,16 +272,16 @@ export default {
   // },
 
   beforeRouteUpdate(to, from, next) {
-    console.log(from.params.id)
-    const previousSelectedOffer = this.$parent.$parent.findOfferById(parseInt(from.params.id))
+    console.log(from.params.id);
+    const previousSelectedOffer = this.$parent.$parent.findOfferById(
+      parseInt(from.params.id)
+    );
     console.log("Previous offer: ", previousSelectedOffer);
     console.log("Selected Offer: ", this.selectedOffer);
     console.log("Offer copy: ", this.offerCopy);
 
     if (this.leaveValidated) {
-      this.offerCopy = Offer.copyConstructor(
-          this.selectedOffer
-      );
+      this.offerCopy = Offer.copyConstructor(this.selectedOffer);
 
       this.leaveValidated = false;
       next();
@@ -289,7 +289,6 @@ export default {
     }
 
     if (!previousSelectedOffer.equals(this.offerCopy)) {
-
       this.currentButtonClicked = this.CLICKED_BUTTON_OPTIONS.DISCARD;
       this.setModalParameters(0);
       this.showModal = true;
