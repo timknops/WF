@@ -3,10 +3,11 @@ package app.rest;
 import app.models.Offer;
 import app.repositories.OffersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -24,5 +25,32 @@ public class OffersController {
     @GetMapping(path = "", produces = "application/json")
     public List<Offer> getAllOffers() {
         return this.offersRepo.findAll();
+    }
+
+    @GetMapping(path = "{id}", produces = "application/json")
+    public Offer getOffer(@PathVariable long id) {
+        Offer offer = offersRepo.findById(id);
+
+        return offer;
+    }
+
+    @PostMapping(path = "", produces = "application/json")
+    public ResponseEntity<Offer> addOffer(@RequestBody Offer offer) {
+        Offer newOffer = offersRepo.save(offer);
+
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(newOffer.getId()).toUri();
+        return ResponseEntity.created(location).body(newOffer);
+    }
+
+    @PutMapping(path="{id}", produces = {"application/json"})
+    public ResponseEntity<Offer> updateOffer(@PathVariable long id, @RequestBody Offer offer) {
+        Offer updatedOffer = offersRepo.save(offer);
+        return ResponseEntity.ok(updatedOffer);
+    }
+
+    @DeleteMapping(path = "{id}", produces = {"application/json"})
+    public ResponseEntity<Offer> deleteOffer(@PathVariable long id) {
+        Offer deletedOffer = offersRepo.deleteById(id);
+        return ResponseEntity.ok(deletedOffer);
     }
 }
