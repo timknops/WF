@@ -138,13 +138,14 @@ export class Offer {
    * @return {boolean} true if equal false if objects are not equal
    */
   equals(other) {
+    if (!(other instanceof Offer)) return false;
     return (
       this.id === other.id &&
       this.title === other.title &&
       this.description === other.description &&
       this.valueHighestBid === other.valueHighestBid &&
       this.status === other.status &&
-      this.sellDate.getTime() === other.sellDate.getTime() //check if date are the same by comparing the time in milliseconds
+      this.sellDate?.getTime() === other.sellDate?.getTime() //check if date are the same by comparing the time in milliseconds
     );
   }
 }
