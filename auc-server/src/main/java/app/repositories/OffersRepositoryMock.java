@@ -19,8 +19,8 @@ public class OffersRepositoryMock implements OffersRepository<Offer> {
         this.offers = new ArrayList<>(AMOUNT_OF_OFFERS);
 
         for (int i = 0; i < AMOUNT_OF_OFFERS; i++) {
-            currentId++;
             this.offers.add(Offer.createSampleOffer(currentId));
+            currentId += 3;
         }
     }
 
@@ -40,6 +40,11 @@ public class OffersRepositoryMock implements OffersRepository<Offer> {
         if (index != -1) {
             offers.set(index, item);
         } else {
+            //if no id was given by the user generate the new id.
+            if (item.getId() == 0) {
+                item.setId(currentId);
+                currentId += 3;
+            }
             offers.add(item);
         }
         return item;
