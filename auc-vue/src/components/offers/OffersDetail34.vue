@@ -247,11 +247,10 @@ export default {
       });
     },
 
-    // Use the beforeUnload event to prevent user from leaving the page without saving changes.
+    // Prevent user from leaving the page without saving changes.
     beforeUnload(e) {
-      // Cancel the event.
       if (!this.leaveValidated && this.hasChanged) {
-        // If you prevent default behavior in Mozilla Firefox prompt will always be shown.
+        // Cancel the event.
         e.preventDefault();
 
         // Chrome requires returnValue to be set.
@@ -279,6 +278,7 @@ export default {
     this.offerCopy = Offer.copyConstructor(this.selectedOffer);
   },
 
+  // If the user navigates to another offer, ask the user if they want to discard the changes.
   beforeRouteUpdate(to, from, next) {
     const previousSelectedOffer = this.$parent.$parent.findOfferById(
       parseInt(from.params.id)
