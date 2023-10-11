@@ -198,6 +198,8 @@ export default {
           break;
 
         case this.CLICKED_BUTTON_OPTIONS.DISCARD:
+          // If the user clicked the discard button, the changes are discarded and the user is navigated to the route
+          // that was saved before the user clicked the discard button.
           this.leaveValidated = true;
           this.$router.push(this.navigateTo);
           break;
@@ -244,6 +246,18 @@ export default {
         hour12: false,
       });
     },
+
+    // Use the beforeUnload event to prevent user from leaving the page without saving changes.
+    beforeUnload(e) {
+      // Cancel the event.
+      if (!this.leaveValidated && this.hasChanged) {
+        // If you prevent default behavior in Mozilla Firefox prompt will always be shown.
+        e.preventDefault();
+
+        // Chrome requires returnValue to be set.
+        e.returnValue = "";
+      }
+    },
   },
 
   computed: {
@@ -265,20 +279,10 @@ export default {
     this.offerCopy = Offer.copyConstructor(this.selectedOffer);
   },
 
-  // watch: {
-  //   selectedOffer() {
-  //     this.offerCopy = Offer.copyConstructor(this.selectedOffer);
-  //   },
-  // },
-
   beforeRouteUpdate(to, from, next) {
-    console.log(from.params.id);
     const previousSelectedOffer = this.$parent.$parent.findOfferById(
       parseInt(from.params.id)
     );
-    console.log("Previous offer: ", previousSelectedOffer);
-    console.log("Selected Offer: ", this.selectedOffer);
-    console.log("Offer copy: ", this.offerCopy);
 
     if (this.leaveValidated) {
       this.offerCopy = Offer.copyConstructor(this.selectedOffer);
@@ -288,11 +292,12 @@ export default {
       return;
     }
 
+    // If there have been changes, ask the user if they want to discard them.
     if (!previousSelectedOffer.equals(this.offerCopy)) {
       this.currentButtonClicked = this.CLICKED_BUTTON_OPTIONS.DISCARD;
       this.setModalParameters(0);
       this.showModal = true;
-      this.navigateTo = to.path;
+      this.navigateTo = to.path; // Save the path to navigate to after the user has discarded the changes.
 
       next(false);
     } else {
@@ -302,27 +307,37 @@ export default {
   },
 
   beforeRouteLeave(to, from, next) {
-    //when emitting the deleteOffer and the updateOffer the beforeRouteLeave is called with this being null
-    //if this is the case sent user to the next route, save should always be possible, and delete is already validate with a pop-up
+    // When emitting the deleteOffer and the updateOffer the beforeRouteLeave is called with this being null.
+    // If this is the case sent user to the next route, save should always be possible, and delete is already validate with a pop-up.
     if (!this) {
       next();
     }
+
     if (this.leaveValidated) {
       next();
 
       return;
     }
 
+    // If changes have been made, ask the user if they want to discard them.
     if (this.hasChanged) {
       this.currentButtonClicked = this.CLICKED_BUTTON_OPTIONS.DISCARD;
       this.setModalParameters(0);
       this.showModal = true;
-      this.navigateTo = to.path;
+      this.navigateTo = to.path; // Save the path to navigate to after the user has discarded the changes.
 
-      next(false);
+      next(false); // Prevent the user from leaving the page.
     } else {
-      next();
+      next(); // Allow the user to leave the page.
     }
+  },
+
+  mounted() {
+    window.addEventListener("beforeunload", this.beforeUnload);
+  },
+
+  beforeUnmount() {
+    window.removeEventListener("beforeunload", this.beforeUnload);
   },
 };
 </script>
