@@ -1,5 +1,7 @@
 package app.rest;
 
+import app.exceptions.PreConditionFailedException;
+import app.exceptions.ResourceNotFoundException;
 import app.models.Offer;
 import app.repositories.OffersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,8 +30,12 @@ public class OffersController {
     }
 
     @GetMapping(path = "{id}", produces = "application/json")
-    public Offer getOffer(@PathVariable long id) {
+    public Offer getOffer(@PathVariable long id) throws ResourceNotFoundException {
         Offer offer = offersRepo.findById(id);
+
+        if (offer == null) {
+            throw new ResourceNotFoundException("Offer with id " + id + " not found");
+        }
 
         return offer;
     }
@@ -43,14 +49,24 @@ public class OffersController {
     }
 
     @PutMapping(path="{id}", produces = {"application/json"})
-    public ResponseEntity<Offer> updateOffer(@PathVariable long id, @RequestBody Offer offer) {
+    public ResponseEntity<Offer> updateOffer(@PathVariable long id, @RequestBody Offer offer) throws PreConditionFailedException {
+        if (id != offer.getId()) {
+            throw new PreConditionFailedException("Id in path and body do not match");
+        }
+
         Offer updatedOffer = offersRepo.save(offer);
+
         return ResponseEntity.ok(updatedOffer);
     }
 
     @DeleteMapping(path = "{id}", produces = {"application/json"})
-    public ResponseEntity<Offer> deleteOffer(@PathVariable long id) {
+    public ResponseEntity<Offer> deleteOffer(@PathVariable long id) throws ResourceNotFoundException {
         Offer deletedOffer = offersRepo.deleteById(id);
+
+        if (deletedOffer == null) {
+            throw new ResourceNotFoundException("Cannot delete offer with id " + id + ". Offer not found.");
+        }
+
         return ResponseEntity.ok(deletedOffer);
     }
 }
