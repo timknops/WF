@@ -1,5 +1,7 @@
 package app.models;
 
+import com.fasterxml.jackson.annotation.JsonView;
+
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -33,9 +35,16 @@ public class Offer {
             "A ford focus, from 2017",
             "A rustic couch with laying area",
     };
+
+    @JsonView(ViewClasses.Summary.class)
     private long id = 0;
+
+    @JsonView(ViewClasses.Summary.class)
     private String title;
+
+    @JsonView(ViewClasses.Summary.class)
     private Status status;
+
     private String description;
     private LocalDateTime sellDate;
     private int valueHighestBid;

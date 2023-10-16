@@ -3,7 +3,9 @@ package app.rest;
 import app.exceptions.PreConditionFailedException;
 import app.exceptions.ResourceNotFoundException;
 import app.models.Offer;
+import app.models.ViewClasses;
 import app.repositories.OffersRepository;
+import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +28,12 @@ public class OffersController {
 
     @GetMapping(path = "", produces = "application/json")
     public List<Offer> getAllOffers() {
+        return this.offersRepo.findAll();
+    }
+
+    @JsonView(ViewClasses.Summary.class)
+    @GetMapping(path = "/summary", produces = "application/json")
+    public List<Offer> getSummaryOfAllOffers() {
         return this.offersRepo.findAll();
     }
 
