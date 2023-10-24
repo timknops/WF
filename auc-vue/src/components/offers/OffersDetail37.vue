@@ -304,12 +304,6 @@ export default {
   },
 
   beforeRouteLeave(to, from, next) {
-    // When emitting the deleteOffer and the updateOffer the beforeRouteLeave is called with this being null.
-    // If this is the case sent user to the next route, save should always be possible, and delete is already validate with a pop-up.
-    if (!this) {
-      next();
-    }
-
     if (this.leaveValidated) {
       next();
 

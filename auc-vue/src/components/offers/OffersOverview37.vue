@@ -97,7 +97,6 @@ export default {
       this.offers = this.offers.filter(
           (offer) => !offer.equals(offerToBeDeleted)
       ); // Remove the item from the array of offers.
-      this.selectedOffer = null;
       this.$router.push(this.$route.matched[0].path);
     },
 
@@ -111,8 +110,6 @@ export default {
         return offer.id === updatedOffer.id;
       });
       this.offers[index] = updatedOffer;
-
-      this.selectedOffer = null;
       this.$router.push(this.$route.matched[0].path);
     },
 
