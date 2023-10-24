@@ -80,7 +80,6 @@ export default {
     setSelectedOffer(offer) {
       //return to main screen when offer is deselected
       if (offer === this.selectedOffer) {
-        this.selectedOffer = null;
         this.$router.push(this.$route.matched[0].path);
         return;
       }
