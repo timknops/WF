@@ -50,6 +50,7 @@ import { Offer } from "@/models/offer";
 
 export default {
   name: "OffersOverview37",
+  inject: ['offersService'],
   data() {
     return {
       offerId: 30000,
@@ -118,12 +119,8 @@ export default {
       return this.offers.find((offer) => offer.id === id);
     },
   },
-  created() {
-    const OFFER_LIST_LENGTH = 8;
-
-    for (let i = 0; i < OFFER_LIST_LENGTH; i++) {
-      this.offers.push(this.createNewOffer());
-    }
+  async created() {
+    this.offers = await this.offersService.asyncFindAll();
   },
   watch: {
     $route() {

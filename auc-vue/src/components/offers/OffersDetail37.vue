@@ -126,6 +126,7 @@ import ModalComponent from "@/components/ModalComponent.vue";
 export default {
   name: "OffersDetail37",
   components: { ModalComponent },
+  inject:['offersService'],
   props: {
     selectedOffer: Offer,
   },
