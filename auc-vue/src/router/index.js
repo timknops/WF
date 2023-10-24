@@ -6,6 +6,8 @@ import UnknownRoute from "@/components/UnknownRoute.vue";
 import OffersOverview33 from "@/components/offers/OffersOverview33.vue";
 import OffersDetail32 from "@/components/offers/OffersDetail32.vue";
 import OffersDetail34 from "@/components/offers/OffersDetail34.vue";
+import OffersOverview37 from "@/components/offers/OffersOverview37.vue";
+import OffersDetail37 from "@/components/offers/OffersDetail37.vue";
 
 const routes = [
   { path: "/", redirect: "/home" },
@@ -21,6 +23,11 @@ const routes = [
     path: "/offers/overview34",
     component: OffersOverview33,
     children: [{ path: ":id", component: OffersDetail34 }],
+  },
+  {
+    path: "/offers/overview37",
+    component: OffersOverview37,
+    children: [{ path: ":id", component: OffersDetail37 }],
   },
   { path: "/:pregMatch(.*)", component: UnknownRoute },
 ];
