@@ -1,4 +1,4 @@
-import {Offer} from "@/models/offer";
+import { Offer } from "@/models/offer";
 
 export class OffersAdaptor {
   resourceURL;
@@ -13,7 +13,7 @@ export class OffersAdaptor {
       return await response.json();
     } else {
       //Log the error if there is an error provided by the http response body.
-      console.log(response, !response.bodyUsed ? await response.text() : '');
+      console.log(response, !response.bodyUsed ? await response.text() : "");
       return null;
     }
   }
@@ -24,7 +24,7 @@ export class OffersAdaptor {
    */
   async asyncFindAll() {
     const data = await this.fetchJSON(this.resourceURL);
-    return data?.map(offer => Offer.copyConstructor(offer))
+    return data?.map((offer) => Offer.copyConstructor(offer));
   }
 
   /**
@@ -33,7 +33,7 @@ export class OffersAdaptor {
    * @return {Promise<Offer> || null}
    */
   async asyncFindById(id) {
-    const offer = await this.fetchJSON(`${this.resourceURL}/${id}`)
+    const offer = await this.fetchJSON(`${this.resourceURL}/${id}`);
     return Offer.copyConstructor(offer);
   }
 
@@ -42,19 +42,28 @@ export class OffersAdaptor {
    * @param {Offer} offer
    * @return {Promise<Offer>}
    */
-  async asyncSave(offer){
+  async asyncSave(offer) {
     if (offer.id === 0) {
-      const newOffer = await this.fetchJSON(this.resourceURL, {method: "POST", body: JSON.stringify(offer)})
+      const newOffer = await this.fetchJSON(this.resourceURL, {
+        method: "POST",
+        body: JSON.stringify(offer),
+      }); // TODO: Returns null???
+
       return Offer.copyConstructor(newOffer);
     } else {
-      const updatedOffer = await this.fetchJSON(`${this.resourceURL}/${offer.id}`, {method: "PUT", body: JSON.stringify(offer)})
+      const updatedOffer = await this.fetchJSON(
+        `${this.resourceURL}/${offer.id}`,
+        { method: "PUT", body: JSON.stringify(offer) }
+      );
+
       return Offer.copyConstructor(updatedOffer);
     }
-
   }
 
   async asyncDeleteById(id) {
-    const deletedOffer = await this.fetchJSON(`${this.resourceURL}/${id}`, {method: "DELETE"})
+    const deletedOffer = await this.fetchJSON(`${this.resourceURL}/${id}`, {
+      method: "DELETE",
+    });
     return Offer.copyConstructor(deletedOffer);
   }
 }

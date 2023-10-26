@@ -3,43 +3,43 @@
     <div class="w-25 mx-5">
       <h2 class="p-0 fw-bold text-primary">List of all offers</h2>
       <div
-          class="rounded-3 my-3 px-0 border overflow-x-hidden overflow-y-scroll table-container"
-          ref="tableDiv"
+        class="rounded-3 my-3 px-0 border overflow-x-hidden overflow-y-scroll table-container"
+        ref="tableDiv"
       >
         <table class="table mb-0 table-striped text-center">
           <thead>
-          <tr class="sticky-top">
-            <th scope="col">Title</th>
-          </tr>
+            <tr class="sticky-top">
+              <th scope="col">Title</th>
+            </tr>
           </thead>
           <tbody>
-          <tr
+            <tr
               v-for="offer in offers"
               :key="offer.id"
               :class="{ 'table-active': selectedOffer === offer }"
               @click="setSelectedOffer(offer)"
-          >
-            <td>{{ offer.title }}</td>
-          </tr>
+            >
+              <td>{{ offer.title }}</td>
+            </tr>
           </tbody>
         </table>
       </div>
       <div class="d-flex justify-content-end p-0 mb-3">
-        <button class="btn btn-primary" @click="onNewOffer()">New Offer</button>
+        <button class="btn btn-primary" @click="onNewOffer">New Offer</button>
       </div>
     </div>
     <div class="w-75 mt-5 pt-2">
       <div
-          v-if="selectedOffer === null || selectedOffer === undefined"
-          class="h-100 d-flex align-items-center"
+        v-if="selectedOffer === null || selectedOffer === undefined"
+        class="h-100 d-flex align-items-center"
       >
         <p>Select an offer at the left</p>
       </div>
       <router-view
-          v-else
-          @delete-offer="deleteOffer"
-          @update-offer="updateOffer"
-          :selectedOffer="selectedOffer"
+        v-else
+        @delete-offer="deleteOffer"
+        @update-offer="updateOffer"
+        :selectedOffer="selectedOffer"
       />
     </div>
   </div>
@@ -50,7 +50,7 @@ import { Offer } from "@/models/offer";
 
 export default {
   name: "OffersOverview37",
-  inject: ['offersService'],
+  inject: ["offersService"],
   data() {
     return {
       offerId: 30000,
@@ -59,21 +59,23 @@ export default {
     };
   },
   methods: {
-    createNewOffer() {
-      return Offer.createSampleOffer((this.offerId += 3));
+    async createNewOffer() {
+      const emptyOffer = Offer.createEmptyOffer();
+      return await this.offersService.asyncSave(emptyOffer);
     },
 
-    onNewOffer() {
-      this.offers.push(this.createNewOffer());
+    async onNewOffer() {
+      const newOffer = await this.createNewOffer();
+      this.offers.push(newOffer);
+      console.log(this.offers);
 
-      // Waits until the DOM is updated before updating the scroll position.
-      this.$nextTick(() => {
-        this.$refs.tableDiv.scrollTop = this.$refs.tableDiv.scrollHeight;
-      });
+      await this.$nextTick();
+
+      this.$refs.tableDiv.scrollTop = this.$refs.tableDiv.scrollHeight;
 
       this.selectedOffer = this.offers[this.offers.length - 1];
       this.$router.push(
-          this.$route.matched[0].path + "/" + this.selectedOffer.id
+        this.$route.matched[0].path + "/" + this.selectedOffer.id
       );
     },
 
@@ -88,14 +90,14 @@ export default {
       if (offer != null) {
         this.selectedOffer = offer;
         this.$router.push(
-            this.$route.matched[0].path + "/" + this.selectedOffer.id
+          this.$route.matched[0].path + "/" + this.selectedOffer.id
         );
       }
     },
 
     deleteOffer(offerToBeDeleted) {
       this.offers = this.offers.filter(
-          (offer) => !offer.equals(offerToBeDeleted)
+        (offer) => !offer.equals(offerToBeDeleted)
       ); // Remove the item from the array of offers.
       this.$router.push(this.$route.matched[0].path);
     },

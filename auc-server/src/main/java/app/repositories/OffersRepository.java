@@ -31,4 +31,10 @@ public interface OffersRepository<E> {
      * @return the item which was deleted, or null if the item didn't exists
      */
     E deleteById(long id);
+
+    /**
+     * Get the next id for an item
+     * @return the next id
+     */
+    long getNextId();
 }

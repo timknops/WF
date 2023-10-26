@@ -18,7 +18,7 @@ export class Offer {
    * constructor for creating a new Offer
    * @param id {number}
    * @param title {string}
-   * @param status {Offer.Status}
+   * @param status {string}
    * @param description {string}
    * @param sellDate {Date}
    * @param valueHighestBid {number}
@@ -45,6 +45,14 @@ export class Offer {
     //Clone the complex datatypes in offer like date
     copy.sellDate = new Date(offer.sellDate);
     return copy;
+  }
+
+  /**
+   * Create an empty offer.
+   * @returns {Offer}  an empty offer
+   */
+  static createEmptyOffer() {
+    return new Offer(0, "", Offer.Status.NEW, "", new Date(), 0);
   }
 
   static createSampleOffer(id) {

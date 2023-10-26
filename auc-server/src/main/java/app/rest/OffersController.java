@@ -50,6 +50,10 @@ public class OffersController {
 
     @PostMapping(path = "", produces = "application/json")
     public ResponseEntity<Offer> addOffer(@RequestBody Offer offer) {
+        if (offer.getId() == 0) { // If no id was given, generate a new id.
+            offer.setId(offersRepo.getNextId());
+        }
+
         Offer newOffer = offersRepo.save(offer);
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(newOffer.getId()).toUri();
