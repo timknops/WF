@@ -52,7 +52,7 @@ export class Offer {
    * @returns {Offer}  an empty offer
    */
   static createEmptyOffer() {
-    return new Offer(0, "", Offer.Status.NEW, "", new Date(), 0);
+    return new Offer(0, "New Offer", Offer.Status.NEW, "", new Date(), 0);
   }
 
   static createSampleOffer(id) {

@@ -61,19 +61,20 @@ export default {
   methods: {
     async createNewOffer() {
       const emptyOffer = Offer.createEmptyOffer();
+
       return await this.offersService.asyncSave(emptyOffer);
     },
 
     async onNewOffer() {
       const newOffer = await this.createNewOffer();
       this.offers.push(newOffer);
+
       console.log(this.offers);
 
       await this.$nextTick();
-
       this.$refs.tableDiv.scrollTop = this.$refs.tableDiv.scrollHeight;
 
-      this.selectedOffer = this.offers[this.offers.length - 1];
+      this.selectedOffer = newOffer;
       this.$router.push(
         this.$route.matched[0].path + "/" + this.selectedOffer.id
       );

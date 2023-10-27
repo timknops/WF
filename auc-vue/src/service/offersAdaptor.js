@@ -46,8 +46,11 @@ export class OffersAdaptor {
     if (offer.id === 0) {
       const newOffer = await this.fetchJSON(this.resourceURL, {
         method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify(offer),
-      }); // TODO: Returns null???
+      });
 
       return Offer.copyConstructor(newOffer);
     } else {
