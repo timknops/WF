@@ -69,9 +69,7 @@ export default {
       const newOffer = await this.createNewOffer();
       this.offers.push(newOffer);
 
-      console.log(this.offers);
-
-      await this.$nextTick();
+      await this.$nextTick(); // Wait for the DOM to update.
       this.$refs.tableDiv.scrollTop = this.$refs.tableDiv.scrollHeight;
 
       this.selectedOffer = newOffer;
@@ -96,37 +94,28 @@ export default {
       }
     },
 
-    deleteOffer(offerToBeDeleted) {
-      this.offers = this.offers.filter(
-        (offer) => !offer.equals(offerToBeDeleted)
-      ); // Remove the item from the array of offers.
+    async deleteOffer(offerToBeDeleted) {
+      await this.offersService.asyncDeleteById(offerToBeDeleted.id);
       this.$router.push(this.$route.matched[0].path);
     },
 
-    /**
-     * update the selected offer with the new changes which were made
-     * @param {Offer} updatedOffer - an offer object with changes
-     */
-    updateOffer(updatedOffer) {
-      //find the index of the offer which is being updated and update the list
-      const index = this.offers.findIndex((offer) => {
-        return offer.id === updatedOffer.id;
-      });
-      this.offers[index] = updatedOffer;
+    async updateOffer(updatedOffer) {
+      await this.offersService.asyncSave(updatedOffer);
       this.$router.push(this.$route.matched[0].path);
     },
 
-    findOfferById(id) {
-      // The id parameter must be of type integer!
-      return this.offers.find((offer) => offer.id === id);
+    async findOfferById(id) {
+      return this.offersService.asyncFindById(id); // The id parameter must be of type integer!
     },
   },
   async created() {
     this.offers = await this.offersService.asyncFindAll();
   },
   watch: {
-    $route() {
-      this.selectedOffer = this.findOfferById(parseInt(this.$route.params.id));
+    async $route() {
+      this.selectedOffer = await this.findOfferById(
+        parseInt(this.$route.params.id)
+      );
 
       //if the offer doesn't exist remove the id from the url
       if (this.selectedOffer === undefined) {

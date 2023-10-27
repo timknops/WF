@@ -7,6 +7,7 @@ import app.models.ViewClasses;
 import app.repositories.OffersRepository;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -50,10 +51,6 @@ public class OffersController {
 
     @PostMapping(path = "", produces = "application/json")
     public ResponseEntity<Offer> addOffer(@RequestBody Offer offer) {
-        if (offer.getId() == 0) { // If no id was given, generate a new id.
-            offer.setId(offersRepo.getNextId());
-        }
-
         Offer newOffer = offersRepo.save(offer);
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(newOffer.getId()).toUri();

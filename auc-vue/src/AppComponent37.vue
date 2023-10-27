@@ -7,7 +7,7 @@
 <script>
 import HeaderComponent from "./components/HeaderComponent.vue";
 import NavBar from "@/components/NavBar.vue";
-import {OffersAdaptor} from "@/service/offersAdaptor";
+import { OffersAdaptor } from "@/service/offersAdaptor";
 import Config from "@/config.js";
 
 export default {
@@ -18,9 +18,9 @@ export default {
   },
   provide() {
     return {
-      offersService: new OffersAdaptor(`${Config.BACKEND_URL}/offers`)
-    }
-  }
+      offersService: new OffersAdaptor(`${Config.BACKEND_URL}/offers`),
+    };
+  },
 };
 </script>
 

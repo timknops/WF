@@ -25,11 +25,6 @@ public class OffersRepositoryMock implements OffersRepository<Offer> {
     }
 
     @Override
-    public long getNextId() {
-        return currentId + 3;
-    }
-
-    @Override
     public List<Offer> findAll() {
         return offers;
     }

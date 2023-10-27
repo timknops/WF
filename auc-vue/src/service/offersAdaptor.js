@@ -56,13 +56,24 @@ export class OffersAdaptor {
     } else {
       const updatedOffer = await this.fetchJSON(
         `${this.resourceURL}/${offer.id}`,
-        { method: "PUT", body: JSON.stringify(offer) }
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(offer),
+        }
       );
 
       return Offer.copyConstructor(updatedOffer);
     }
   }
 
+  /**
+   * Delete an offer by its id
+   * @param {Number} id the id of an offer
+   * @return {Promise<Offer> || null}  the deleted offer or null
+   */
   async asyncDeleteById(id) {
     const deletedOffer = await this.fetchJSON(`${this.resourceURL}/${id}`, {
       method: "DELETE",
