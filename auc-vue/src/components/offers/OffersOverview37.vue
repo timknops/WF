@@ -80,7 +80,6 @@ export default {
       if (offer === this.selectedOffer) {
         this.$router.push(this.$route.matched[0].path);
         this.selectedOffer = null;
-
         return;
       }
 
