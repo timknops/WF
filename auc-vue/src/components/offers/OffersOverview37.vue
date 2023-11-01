@@ -53,16 +53,13 @@ export default {
   inject: ["offersService"],
   data() {
     return {
-      offerId: 30000,
       offers: [],
       selectedOffer: null,
     };
   },
   methods: {
     async createNewOffer() {
-      const emptyOffer = Offer.createEmptyOffer();
-
-      return await this.offersService.asyncSave(emptyOffer);
+      return await this.offersService.asyncSave(Offer.createEmptyOffer());
     },
 
     async onNewOffer() {
@@ -82,15 +79,15 @@ export default {
       //return to main screen when offer is deselected
       if (offer === this.selectedOffer) {
         this.$router.push(this.$route.matched[0].path);
+        this.selectedOffer = null;
+
         return;
       }
 
       //if the offer exist add the id to the param
       if (offer != null) {
         this.selectedOffer = offer;
-        this.$router.push(
-          this.$route.matched[0].path + "/" + this.selectedOffer.id
-        );
+        this.$router.push(this.$route.matched[0].path + "/" + offer.id);
       }
     },
 
@@ -103,19 +100,15 @@ export default {
       await this.offersService.asyncSave(updatedOffer);
       this.$router.push(this.$route.matched[0].path);
     },
-
-    async findOfferById(id) {
-      return this.offersService.asyncFindById(id); // The id parameter must be of type integer!
-    },
   },
   async created() {
     this.offers = await this.offersService.asyncFindAll();
   },
   watch: {
     async $route() {
-      this.selectedOffer = await this.findOfferById(
-        parseInt(this.$route.params.id)
-      );
+      // this.selectedOffer = await this.offersService.asyncFindById(
+      //   parseInt(this.$route.params.id)
+      // );
 
       //if the offer doesn't exist remove the id from the url
       if (this.selectedOffer === undefined) {

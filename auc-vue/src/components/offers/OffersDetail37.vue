@@ -156,9 +156,9 @@ export default {
     },
 
     clearInputs() {
-      this.offerCopy.title = "";
+      this.offerCopy.title = "Empty Offer";
       this.offerCopy.description = "";
-      this.offerCopy.status = "";
+      this.offerCopy.status = this.statusOptions[0];
       this.offerCopy.sellDate = null;
       this.offerCopy.valueHighestBid = 0;
     },
@@ -278,7 +278,7 @@ export default {
 
   // If the user navigates to another offer, ask the user if they want to discard the changes.
   async beforeRouteUpdate(to, from, next) {
-    const previousSelectedOffer = await this.$parent.$parent.findOfferById(
+    const previousSelectedOffer = await this.offersService.asyncFindById(
       parseInt(from.params.id)
     );
 
@@ -330,6 +330,16 @@ export default {
 
   beforeUnmount() {
     window.removeEventListener("beforeunload", this.beforeUnload);
+  },
+
+  // Force a reload of the page when changes are made.
+  unmounted() {
+    console.log(this.showModal);
+    if (!this.leaveValidated) return;
+
+    if (this.hasChanged || this.currentButtonClicked === "DELETE") {
+      window.location.reload();
+    }
   },
 };
 </script>
