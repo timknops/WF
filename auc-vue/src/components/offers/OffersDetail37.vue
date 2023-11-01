@@ -334,9 +334,6 @@ export default {
 
   // Force a reload of the page when changes are made.
   unmounted() {
-    console.log(this.showModal);
-    if (!this.leaveValidated) return;
-
     if (this.hasChanged || this.currentButtonClicked === "DELETE") {
       window.location.reload();
     }
