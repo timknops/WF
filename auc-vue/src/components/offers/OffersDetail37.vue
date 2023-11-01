@@ -127,14 +127,12 @@ export default {
   name: "OffersDetail37",
   components: { ModalComponent },
   inject: ["offersService"],
-  props: {
-    selectedOffer: Offer,
-  },
   emits: ["deleteOffer", "updateOffer"],
   data() {
     return {
-      statusOptions: Object.values(Offer.Status),
+      selectedOffer: Offer,
       offerCopy: Offer,
+      statusOptions: Object.values(Offer.Status),
       showModal: false,
       modalTitle: "",
       modalText: "",
@@ -150,7 +148,18 @@ export default {
       leaveValidated: false,
     };
   },
+  async created() {
+    await this.reloadOffer();
+  },
   methods: {
+    async reloadOffer() {
+      this.selectedOffer = await this.offersService.asyncFindById(
+        this.$route?.params?.id
+      );
+
+      this.offerCopy = Offer.copyConstructor(this.selectedOffer);
+    },
+
     handleSave() {
       this.$emit("updateOffer", this.offerCopy);
     },
@@ -195,7 +204,7 @@ export default {
           break;
 
         case this.CLICKED_BUTTON_OPTIONS.DELETE:
-          this.$emit("deleteOffer", this.offerCopy);
+          this.deleteOffer(this.offerCopy);
           break;
 
         case this.CLICKED_BUTTON_OPTIONS.DISCARD:
@@ -271,16 +280,11 @@ export default {
       },
     },
   },
-
-  created() {
-    this.offerCopy = Offer.copyConstructor(this.selectedOffer);
-  },
-
   // If the user navigates to another offer, ask the user if they want to discard the changes.
   async beforeRouteUpdate(to, from, next) {
-    // const previousSelectedOffer = await this.offersService.asyncFindById(
-    //   parseInt(from.params.id)
-    // );
+    const previousSelectedOffer = await this.offersService.asyncFindById(
+      parseInt(from.params.id)
+    );
 
     if (this.leaveValidated) {
       this.offerCopy = Offer.copyConstructor(this.selectedOffer);
@@ -293,21 +297,18 @@ export default {
     this.offerCopy = Offer.copyConstructor(this.selectedOffer);
     next();
 
-    // // If there have been changes, ask the user if they want to discard them.
-    // if (!previousSelectedOffer.equals(this.offerCopy)) {
-    //   // this.currentButtonClicked = this.CLICKED_BUTTON_OPTIONS.DISCARD;
-    //   // this.setModalParameters(0);
-    //   // this.showModal = true;
-    //   // this.navigateTo = to.path; // Save the path to navigate to after the user has discarded the changes.
-    //
-    //   this.offerCopy = Offer.copyConstructor(this.selectedOffer);
-    //   // this.leaveValidated = false;
-    //
-    //   next();
-    // } else {
-    //   this.offerCopy = Offer.copyConstructor(this.selectedOffer);
-    //   next();
-    // }
+    // If there have been changes, ask the user if they want to discard them.
+    if (!previousSelectedOffer.equals(this.offerCopy)) {
+      this.currentButtonClicked = this.CLICKED_BUTTON_OPTIONS.DISCARD;
+      this.setModalParameters(0);
+      this.showModal = true;
+      this.navigateTo = to.path; // Save the path to navigate to after the user has discarded the changes.
+
+      next(false);
+    } else {
+      this.offerCopy = Offer.copyConstructor(this.selectedOffer);
+      next();
+    }
   },
 
   beforeRouteLeave(to, from, next) {

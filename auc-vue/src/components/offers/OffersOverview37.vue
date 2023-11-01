@@ -39,7 +39,6 @@
         v-else
         @delete-offer="deleteOffer"
         @update-offer="updateOffer"
-        :selectedOffer="selectedOffer"
       />
     </div>
   </div>
