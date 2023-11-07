@@ -237,13 +237,16 @@ export default {
       This is because of the Netherlands is two hours ahead from the greenwich time utc +0
       therefore the date needs to be offset with the timezone offset
        */
-      const MILLISECONDS_IN_MINUTE = 60000;
-      const timeOffsetInMilliseconds =
-        this.offerCopy.sellDate.getTime() +
-        this.offerCopy.sellDate.getTimezoneOffset() * MILLISECONDS_IN_MINUTE;
-      const dateWithOffset = new Date(timeOffsetInMilliseconds);
+      // const MILLISECONDS_IN_MINUTE = 60000;
+      // const timeOffsetInMilliseconds =
+      //   this.offerCopy.sellDate.getTime() +
+      //   this.offerCopy.sellDate.getTimezoneOffset() * MILLISECONDS_IN_MINUTE;
+      // const dateWithOffset = new Date(timeOffsetInMilliseconds);
 
-      return dateWithOffset.toLocaleDateString("en-IN", {
+      const date = new Date(this.offerCopy.sellDate);
+      if (date.toString() === "Invalid Date") return;
+
+      return date.toLocaleDateString("en-IN", {
         weekday: "long",
         year: "numeric",
         month: "long",
@@ -265,15 +268,38 @@ export default {
       }
     },
   },
+  watch: {
+    async $route() {
+      await this.reloadOffer();
+    },
+  },
 
   computed: {
     hasChanged() {
-      return !this.selectedOffer.equals(this.offerCopy);
+      if (this.offerCopy instanceof Offer) {
+        return !this.offerCopy.equals(this.selectedOffer);
+      }
+
+      return false;
+      // console.log(this.offerCopy);
+      // console.log(this.selectedOffer);
+      // return !this.offerCopy.equals(this.selectedOffer);
     },
 
     sellDateUpdater: {
       get() {
-        return new Date(this.offerCopy.sellDate).toISOString().slice(0, -8);
+        const date = new Date(this.offerCopy.sellDate);
+        if (date.toString() === "Invalid Date") return;
+
+        return date.toISOString().slice(0, -8);
+
+        // if (this.offerCopy.sellDate) {
+        //   const localDate = new Date(this.offerCopy.sellDate);
+        //   return localDate.toISOString().slice(0, -8);
+        // } else {
+        //   return ""; // Handle null or undefined dates
+        // }
+        // return "2023-10-13T06:31";
       },
       set(date) {
         this.offerCopy.sellDate = new Date(date);
@@ -337,15 +363,6 @@ export default {
 
   beforeUnmount() {
     window.removeEventListener("beforeunload", this.beforeUnload);
-  },
-
-  // Force a reload of the page when changes are made.
-  unmounted() {
-    if (!this.leaveValidated && this.currentButtonClicked !== "DELETE") return;
-
-    if (this.hasChanged || this.currentButtonClicked === "DELETE") {
-      window.location.reload();
-    }
   },
 };
 </script>
