@@ -48,7 +48,7 @@ public class Offer {
 
     private String description;
 
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", shape = JsonFormat.Shape.STRING, timezone = "Europe/Amsterdam")
     private LocalDateTime sellDate;
 
     private int valueHighestBid;
