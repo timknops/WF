@@ -1,6 +1,6 @@
 <!-- eslint-disable vue/no-mutating-props -->
 <template>
-  <form>
+  <form v-if="selectedOffer !== null">
     <div class="rounded-3 px-0 mb-3 border overflow-hidden w-100">
       <table class="table mb-0 table-striped">
         <thead class="text-center">
@@ -82,8 +82,9 @@
       >
         Clear
       </button>
+      <!-- Do not make the reset button type "reset" because it will reset the form to the initial values! -->
       <button
-        type="reset"
+        type="button"
         class="btn btn-primary"
         :disabled="!hasChanged"
         @click="handleModal(CLICKED_BUTTON_OPTIONS.RESET, 0)"
@@ -101,7 +102,7 @@
         type="button"
         class="btn btn-success"
         :disabled="!hasChanged"
-        @click="handleSave()"
+        @click="handleModal(CLICKED_BUTTON_OPTIONS.SAVE, 0)"
       >
         Save
       </button>
@@ -126,11 +127,11 @@ import ModalComponent from "@/components/ModalComponent.vue";
 export default {
   name: "OffersDetail37",
   components: { ModalComponent },
+  emits: ["refresh-offers"],
   inject: ["offersService"],
-  emits: ["deleteOffer", "updateOffer"],
   data() {
     return {
-      selectedOffer: Offer,
+      selectedOffer: null,
       offerCopy: Offer,
       statusOptions: Object.values(Offer.Status),
       showModal: false,
@@ -143,6 +144,7 @@ export default {
         RESET: "RESET",
         DELETE: "DELETE",
         DISCARD: "DISCARD",
+        SAVE: "SAVE",
       }),
       navigateTo: "",
       leaveValidated: false,
@@ -160,8 +162,16 @@ export default {
       this.offerCopy = Offer.copyConstructor(this.selectedOffer);
     },
 
-    handleSave() {
-      this.$emit("updateOffer", this.offerCopy);
+    async handleSave() {
+      // If the title is empty, set it to "Empty Offer".
+      if (this.offerCopy.title === "") {
+        this.offerCopy.title = "Empty Offer";
+      }
+
+      await this.offersService.asyncSave(this.offerCopy);
+      this.$router.push(this.$route.matched[0].path);
+
+      this.$emit("refresh-offers"); // Refresh the offer list.
     },
 
     clearInputs() {
@@ -200,11 +210,14 @@ export default {
           break;
 
         case this.CLICKED_BUTTON_OPTIONS.RESET:
+          console.log("reset");
           this.offerCopy = Offer.copyConstructor(this.selectedOffer);
           break;
 
         case this.CLICKED_BUTTON_OPTIONS.DELETE:
-          this.deleteOffer(this.offerCopy);
+          this.offersService.asyncDeleteById(this.selectedOffer.id);
+          this.$router.push(this.$route.matched[0].path);
+          this.$emit("refresh-offers");
           break;
 
         case this.CLICKED_BUTTON_OPTIONS.DISCARD:
@@ -212,6 +225,11 @@ export default {
           // that was saved before the user clicked the discard button.
           this.leaveValidated = true;
           this.$router.push(this.navigateTo);
+          break;
+
+        case this.CLICKED_BUTTON_OPTIONS.SAVE:
+          this.leaveValidated = true;
+          this.handleSave();
           break;
       }
 
@@ -237,16 +255,13 @@ export default {
       This is because of the Netherlands is two hours ahead from the greenwich time utc +0
       therefore the date needs to be offset with the timezone offset
        */
-      // const MILLISECONDS_IN_MINUTE = 60000;
-      // const timeOffsetInMilliseconds =
-      //   this.offerCopy.sellDate.getTime() +
-      //   this.offerCopy.sellDate.getTimezoneOffset() * MILLISECONDS_IN_MINUTE;
-      // const dateWithOffset = new Date(timeOffsetInMilliseconds);
+      const MILLISECONDS_IN_MINUTE = 60000;
+      const timeOffsetInMilliseconds =
+        this.offerCopy.sellDate.getTime() +
+        this.offerCopy.sellDate.getTimezoneOffset() * MILLISECONDS_IN_MINUTE;
+      const dateWithOffset = new Date(timeOffsetInMilliseconds);
 
-      const date = new Date(this.offerCopy.sellDate);
-      if (date.toString() === "Invalid Date") return;
-
-      return date.toLocaleDateString("en-IN", {
+      return dateWithOffset.toLocaleDateString("en-IN", {
         weekday: "long",
         year: "numeric",
         month: "long",
@@ -269,37 +284,20 @@ export default {
     },
   },
   watch: {
-    async $route() {
-      await this.reloadOffer();
+    $route() {
+      // If the user navigates to another offer, reload the offer.
+      if (this.$route.params.id === undefined) return; // If the user navigates to the overview, do nothing.
+      this.reloadOffer();
     },
   },
-
   computed: {
     hasChanged() {
-      if (this.offerCopy instanceof Offer) {
-        return !this.offerCopy.equals(this.selectedOffer);
-      }
-
-      return false;
-      // console.log(this.offerCopy);
-      // console.log(this.selectedOffer);
-      // return !this.offerCopy.equals(this.selectedOffer);
+      return !this.offerCopy.equals(this.selectedOffer);
     },
 
     sellDateUpdater: {
       get() {
-        const date = new Date(this.offerCopy.sellDate);
-        if (date.toString() === "Invalid Date") return;
-
-        return date.toISOString().slice(0, -8);
-
-        // if (this.offerCopy.sellDate) {
-        //   const localDate = new Date(this.offerCopy.sellDate);
-        //   return localDate.toISOString().slice(0, -8);
-        // } else {
-        //   return ""; // Handle null or undefined dates
-        // }
-        // return "2023-10-13T06:31";
+        return new Date(this.offerCopy.sellDate).toISOString().slice(0, -8);
       },
       set(date) {
         this.offerCopy.sellDate = new Date(date);
@@ -319,9 +317,6 @@ export default {
       next();
       return;
     }
-
-    this.offerCopy = Offer.copyConstructor(this.selectedOffer);
-    next();
 
     // If there have been changes, ask the user if they want to discard them.
     if (!previousSelectedOffer.equals(this.offerCopy)) {

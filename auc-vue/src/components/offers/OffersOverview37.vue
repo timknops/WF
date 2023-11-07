@@ -35,11 +35,7 @@
       >
         <p>Select an offer at the left</p>
       </div>
-      <router-view
-        v-else
-        @delete-offer="deleteOffer"
-        @update-offer="updateOffer"
-      />
+      <router-view v-else @refresh-offers="refreshOffers" />
     </div>
   </div>
 </template>
@@ -89,25 +85,16 @@ export default {
       }
     },
 
-    async deleteOffer(offerToBeDeleted) {
-      await this.offersService.asyncDeleteById(offerToBeDeleted.id);
-      this.$router.push(this.$route.matched[0].path);
-    },
-
-    async updateOffer(updatedOffer) {
-      await this.offersService.asyncSave(updatedOffer);
-      this.$router.push(this.$route.matched[0].path);
+    async refreshOffers() {
+      console.log("refreshing offers");
+      this.offers = await this.offersService.asyncFindAll();
     },
   },
   async created() {
     this.offers = await this.offersService.asyncFindAll();
   },
   watch: {
-    async $route() {
-      // this.selectedOffer = await this.offersService.asyncFindById(
-      //   parseInt(this.$route.params.id)
-      // );
-
+    $route() {
       //if the offer doesn't exist remove the id from the url
       if (this.selectedOffer === undefined) {
         this.$router.push(this.$route.matched[0].path);
