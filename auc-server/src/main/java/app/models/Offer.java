@@ -47,6 +47,7 @@ public class Offer {
     @JsonView(ViewClasses.Summary.class)
     private String title;
 
+    @Enumerated(EnumType.STRING)
     @JsonView(ViewClasses.Summary.class)
     private Status status;
 
