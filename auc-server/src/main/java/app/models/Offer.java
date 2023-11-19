@@ -1,6 +1,7 @@
 package app.models;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import jakarta.persistence.*;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -13,6 +14,7 @@ import java.util.Objects;
  *
  * @author Julian Kruithof
  */
+@Entity
 public class Offer {
     // a list of random offer titles
     private static final String[] TITLES = {"Lamp",
@@ -37,6 +39,9 @@ public class Offer {
     };
 
     @JsonView(ViewClasses.Summary.class)
+    @Id
+    @SequenceGenerator(name = "offers_id", initialValue = 3000)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "offers_id")
     private long id = 0;
 
     @JsonView(ViewClasses.Summary.class)
