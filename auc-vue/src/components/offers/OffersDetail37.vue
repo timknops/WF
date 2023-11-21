@@ -1,132 +1,135 @@
 <!-- eslint-disable vue/no-mutating-props -->
 <template>
-  <form v-if="selectedOffer !== null">
-    <div class="rounded-3 px-0 mb-3 border overflow-hidden w-100">
-      <table class="table mb-0 table-striped">
-        <thead class="text-center">
-          <tr class="sticky-top">
-            <th colspan="2" scope="col">
-              Offer Details ID: {{ offerCopy.id }}
-            </th>
-          </tr>
-        </thead>
-        <tbody class="text-end">
-          <tr>
-            <th scope="row">Title</th>
-            <td>
-              <input
-                class="form-control"
-                type="text"
-                v-model="offerCopy.title"
-              />
-            </td>
-          </tr>
-          <tr>
-            <th scope="row">Description</th>
-            <td>
-              <input
-                type="text"
-                class="form-control"
-                v-model="offerCopy.description"
-              />
-            </td>
-          </tr>
-          <tr>
-            <th scope="row">Status</th>
-            <td>
-              <select class="form-select" v-model="offerCopy.status">
-                <option v-for="status in statusOptions" :key="status">
-                  {{ status }}
-                </option>
-              </select>
-            </td>
-          </tr>
-          <tr>
-            <th scope="row">Sell Date</th>
-            <td class="d-flex flex-column text-start gap-2">
-              <input
-                class="form-control"
-                type="datetime-local"
-                v-model="sellDateUpdater"
-                ref="dateInput"
-              />
-              {{ formatDateDisplay() }}
-            </td>
-          </tr>
-          <tr>
-            <th scope="row">Highest Bid</th>
-            <td>
-              <input
-                type="text"
-                v-model="offerCopy.valueHighestBid"
-                class="form-control"
-              />
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <div class="d-flex justify-content-end column-gap-3 p-0 mb-3">
-      <button
-        type="button"
-        class="btn btn-danger"
-        :disabled="hasChanged"
-        @click="handleModal(CLICKED_BUTTON_OPTIONS.DELETE, 1)"
-      >
-        Delete
-      </button>
-      <button
-        type="button"
-        class="btn btn-primary"
-        @click="handleModal(CLICKED_BUTTON_OPTIONS.CLEAR, 0)"
-      >
-        Clear
-      </button>
-      <!-- Do not make the reset button type "reset" because it will reset the form to the initial values! -->
-      <button
-        type="button"
-        class="btn btn-primary"
-        :disabled="!hasChanged"
-        @click="handleModal(CLICKED_BUTTON_OPTIONS.RESET, 0)"
-      >
-        Reset
-      </button>
-      <button
-        type="button"
-        class="btn btn-primary"
-        @click="handleModal(CLICKED_BUTTON_OPTIONS.CANCEL, 0)"
-      >
-        Cancel
-      </button>
-      <button
-        type="button"
-        class="btn btn-success"
-        :disabled="!hasChanged"
-        @click="handleModal(CLICKED_BUTTON_OPTIONS.SAVE, 0)"
-      >
-        Save
-      </button>
-    </div>
-  </form>
-  <Transition name="fade">
-    <ModalComponent
-      v-if="showModal"
-      :title="modalTitle"
-      :text="modalText"
-      @cancel-modal-btn="this.showModal = false"
-      @corner-close-modal-btn="this.showModal = false"
-      @ok-modal-btn="continueButtonAction"
-    />
-  </Transition>
+  <div>
+    <form v-if="selectedOffer !== null">
+      <div class="rounded-3 px-0 mb-3 border overflow-hidden w-100">
+        <table class="table mb-0 table-striped">
+          <thead class="text-center">
+            <tr class="sticky-top">
+              <th colspan="2" scope="col">
+                Offer Details ID: {{ offerCopy.id }}
+              </th>
+            </tr>
+          </thead>
+          <tbody class="text-end">
+            <tr>
+              <th scope="row">Title</th>
+              <td>
+                <input
+                  class="form-control"
+                  type="text"
+                  v-model="offerCopy.title"
+                />
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">Description</th>
+              <td>
+                <input
+                  type="text"
+                  class="form-control"
+                  v-model="offerCopy.description"
+                />
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">Status</th>
+              <td>
+                <select class="form-select" v-model="offerCopy.status">
+                  <option v-for="status in statusOptions" :key="status">
+                    {{ status }}
+                  </option>
+                </select>
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">Sell Date</th>
+              <td class="d-flex flex-column text-start gap-2">
+                <input
+                  class="form-control"
+                  type="datetime-local"
+                  v-model="sellDateUpdater"
+                  ref="dateInput"
+                />
+                {{ formatDateDisplay() }}
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">Highest Bid</th>
+              <td>
+                <input
+                  type="text"
+                  v-model="offerCopy.valueHighestBid"
+                  class="form-control"
+                />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="d-flex justify-content-end column-gap-3 p-0 mb-3">
+        <button
+          type="button"
+          class="btn btn-danger"
+          :disabled="hasChanged"
+          @click="handleModal(CLICKED_BUTTON_OPTIONS.DELETE, 1)"
+        >
+          Delete
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          @click="handleModal(CLICKED_BUTTON_OPTIONS.CLEAR, 0)"
+        >
+          Clear
+        </button>
+        <!-- Do not make the reset button type "reset" because it will reset the form to the initial values! -->
+        <button
+          type="button"
+          class="btn btn-primary"
+          :disabled="!hasChanged"
+          @click="handleModal(CLICKED_BUTTON_OPTIONS.RESET, 0)"
+        >
+          Reset
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          @click="handleModal(CLICKED_BUTTON_OPTIONS.CANCEL, 0)"
+        >
+          Cancel
+        </button>
+        <button
+          type="button"
+          class="btn btn-success"
+          :disabled="!hasChanged"
+          @click="handleModal(CLICKED_BUTTON_OPTIONS.SAVE, 0)"
+        >
+          Save
+        </button>
+      </div>
+    </form>
+    <Transition name="fade">
+      <ModalComponent
+        v-if="showModal"
+        :title="modalTitle"
+        :text="modalText"
+        @cancel-modal-btn="this.showModal = false"
+        @corner-close-modal-btn="this.showModal = false"
+        @ok-modal-btn="continueButtonAction"
+      />
+    </Transition>
+  </div>
 </template>
 
 <script>
 import { Offer } from "@/models/offer";
 import ModalComponent from "@/components/ModalComponent.vue";
+import { Transition } from "vue";
 
 export default {
   name: "OffersDetail37",
-  components: { ModalComponent },
+  components: { ModalComponent, Transition },
   emits: ["refresh-offers"],
   inject: ["offersService"],
   data() {
