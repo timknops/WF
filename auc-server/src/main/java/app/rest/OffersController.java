@@ -7,7 +7,6 @@ import app.models.ViewClasses;
 import app.repositories.OffersRepository;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -53,12 +52,14 @@ public class OffersController {
     public ResponseEntity<Offer> addOffer(@RequestBody Offer offer) {
         Offer newOffer = offersRepo.save(offer);
 
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(newOffer.getId()).toUri();
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(newOffer.getId())
+                .toUri();
         return ResponseEntity.created(location).body(newOffer);
     }
 
-    @PutMapping(path="{id}", produces = {"application/json"})
-    public ResponseEntity<Offer> updateOffer(@PathVariable long id, @RequestBody Offer offer) throws PreConditionFailedException {
+    @PutMapping(path = "{id}", produces = { "application/json" })
+    public ResponseEntity<Offer> updateOffer(@PathVariable long id, @RequestBody Offer offer)
+            throws PreConditionFailedException {
         if (id != offer.getId()) {
             throw new PreConditionFailedException("Id in path and body do not match");
         }
@@ -68,7 +69,7 @@ public class OffersController {
         return ResponseEntity.ok(updatedOffer);
     }
 
-    @DeleteMapping(path = "{id}", produces = {"application/json"})
+    @DeleteMapping(path = "{id}", produces = { "application/json" })
     public ResponseEntity<Offer> deleteOffer(@PathVariable long id) throws ResourceNotFoundException {
         Offer deletedOffer = offersRepo.deleteById(id);
 

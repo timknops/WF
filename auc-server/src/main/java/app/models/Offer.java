@@ -6,8 +6,9 @@ import jakarta.persistence.*;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
-
 
 /**
  * Modal for an offer
@@ -17,16 +18,16 @@ import java.util.Objects;
 @Entity
 public class Offer {
     // a list of random offer titles
-    private static final String[] TITLES = {"Lamp",
+    private static final String[] TITLES = { "Lamp",
             "Clock",
             "Cabinet",
             "Toolbox",
             "Laptop",
             "Bicycle",
             "Car",
-            "Couch"};
+            "Couch" };
 
-    //a list of random descriptions
+    // a list of random descriptions
     private static final String[] DESCRIPTIONS = {
             "A nice modern lamp",
             "A antique analoge clock with winding mechanism",
@@ -55,19 +56,61 @@ public class Offer {
     private LocalDateTime sellDate;
     private int valueHighestBid;
 
+    @OneToMany(mappedBy = "offer")
+    private List<Bid> bids;
 
     public Offer(long id) {
         this.id = id;
+        this.bids = new ArrayList<>();
     }
 
     public Offer(String title) {
         this.title = title;
+        this.bids = new ArrayList<>();
+
     }
 
     /**
-     * Needed for springboot to initialise its own instances of the offer class, by using getters and setters
+     * Needed for springboot to initialise its own instances of the offer class, by
+     * using getters and setters
      */
-    public Offer() {}
+    public Offer() {
+    }
+
+    /**
+     * Associates this offer with the given bid, if the bid is not already
+     * associated and only if the bid is higher than the current highest bid
+     * 
+     * @param bid the bid to associate with
+     * @return true if the bid was associated, false if the bid was already
+     */
+    public boolean associateBid(Bid bid) {
+        if (this.bids.contains(bid)) {
+            return false;
+        }
+
+        if (bid.getValue() > this.valueHighestBid) {
+            this.valueHighestBid = (int) bid.getValue();
+        }
+
+        this.bids.add(bid);
+        return true;
+    }
+
+    /**
+     * Dissociates this offer with the given bid, if the bid is associated.
+     * 
+     * @param bid the bid to dissociate with
+     * @return true if the bid was dissociated, false if the bid was not associated
+     */
+    public boolean dissociateBid(Bid bid) {
+        if (this.bids.contains(bid)) {
+            this.bids.remove(bid);
+            return true;
+        }
+
+        return false;
+    }
 
     /**
      * create a random sample offer
@@ -86,7 +129,8 @@ public class Offer {
         LocalDateTime previousMonth = today.minusMonths(1);
         LocalDateTime nextMonth = today.plusMonths(1);
 
-        if (offer.getStatus() == Status.EXPIRED || offer.getStatus() == Status.CLOSED || offer.getStatus() == Status.SOLD) {
+        if (offer.getStatus() == Status.EXPIRED || offer.getStatus() == Status.CLOSED
+                || offer.getStatus() == Status.SOLD) {
             offer.setSellDate(randomDate(previousMonth, today));
         } else {
             offer.setSellDate(randomDate(today, nextMonth));
@@ -107,18 +151,18 @@ public class Offer {
      * @param start - the earliest date the function can return
      * @param end   - the latest date the function can return
      * @return random date between the start and criteria
-     * info found at
+     *         info found at
      * @link <a href="https://www.baeldung.com/java-convert-epoch-localdate">...</a>
      */
     private static LocalDateTime randomDate(LocalDateTime start, LocalDateTime end) {
-        //get epoch seconds of start and end date
+        // get epoch seconds of start and end date
         long startEpochSeconds = start.atZone(ZoneId.systemDefault()).toEpochSecond();
         long endEpochSeconds = end.atZone(ZoneId.systemDefault()).toEpochSecond();
 
-        //random value of between the start and end epoch seconds
+        // random value of between the start and end epoch seconds
         long valueBetween = valueBetween(startEpochSeconds, endEpochSeconds);
 
-        //create a LocalDateTime object from the epoch seconds
+        // create a LocalDateTime object from the epoch seconds
         Instant dateInstant = Instant.ofEpochSecond(valueBetween);
         return dateInstant.atZone(ZoneId.systemDefault()).toLocalDateTime();
     }
@@ -126,16 +170,19 @@ public class Offer {
     /**
      * @param min the mininum value to be returned
      * @param max the maximum value to be returned
-     * @param <E> the type of which the random value is chosen, this could be Long, Integer or Double, could expand
+     * @param <E> the type of which the random value is chosen, this could be Long,
+     *            Integer or Double, could expand
      * @return a random value between min and max
      * @throws IllegalArgumentException info for number class
-     * @link <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Number.html">...</a>
+     * @link <a href=
+     *       "https://docs.oracle.com/javase/8/docs/api/java/lang/Number.html">...</a>
      */
     private static <E extends Number> E valueBetween(E min, E max) throws IllegalArgumentException {
         double value = Math.random() * (max.doubleValue() - min.doubleValue()) + min.doubleValue();
 
-        // because of the generic the value which is currently a double should be converted to the correct Wrapper class
-        //i.e. Long, Double or Integer and not int, double or long
+        // because of the generic the value which is currently a double should be
+        // converted to the correct Wrapper class
+        // i.e. Long, Double or Integer and not int, double or long
         // later it could check for Short and Byte etc. not needed for now
         if (min instanceof Double) {
             return (E) Double.valueOf(value);
@@ -144,7 +191,8 @@ public class Offer {
         } else if (min instanceof Long) {
             return (E) Long.valueOf((long) value);
         } else {
-            throw new IllegalArgumentException("argument type is not numeric. Make sure the function uses Long, Double or Integer");
+            throw new IllegalArgumentException(
+                    "argument type is not numeric. Make sure the function uses Long, Double or Integer");
         }
     }
 
@@ -198,8 +246,10 @@ public class Offer {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         Offer offer = (Offer) o;
         return id == offer.id;
     }
@@ -209,7 +259,7 @@ public class Offer {
         return Objects.hash(id);
     }
 
-    //enum of different statuses an offer can have
+    // enum of different statuses an offer can have
     public enum Status {
         NEW,
         FOR_SALE,

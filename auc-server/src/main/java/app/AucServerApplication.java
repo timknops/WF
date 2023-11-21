@@ -1,5 +1,6 @@
 package app;
 
+import app.models.Bid;
 import app.models.Offer;
 import app.repositories.OffersRepository;
 import jakarta.transaction.Transactional;
@@ -20,6 +21,9 @@ public class AucServerApplication implements CommandLineRunner {
     @Autowired
     OffersRepository<Offer> offersRepo;
 
+    @Autowired
+    OffersRepository<Bid> bidsRepo;
+
     @Override
     @Transactional
     public void run(String... args) throws Exception {
@@ -30,13 +34,19 @@ public class AucServerApplication implements CommandLineRunner {
         List<Offer> offerList = offersRepo.findAll();
         final int AMOUNT_OF_OFFERS = 7;
 
-        if (!offerList.isEmpty()) return;
+        if (!offerList.isEmpty())
+            return;
 
         for (int i = 0; i < AMOUNT_OF_OFFERS; i++) {
             Offer offer = Offer.createSampleOffer(0);
             offersRepo.save(offer);
+
+            for (int j = 0; j < 3; j++) {
+                Bid bid = Bid.createSampleBid(offer);
+                bidsRepo.save(bid);
+
+                offer.associateBid(bid);
+            }
         }
-
-
     }
 }
