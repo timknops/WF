@@ -1,5 +1,6 @@
 package app.models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
 
@@ -57,17 +58,15 @@ public class Offer {
     private int valueHighestBid;
 
     @OneToMany(mappedBy = "offer")
-    private List<Bid> bids;
+    @JsonManagedReference
+    private List<Bid> bids = new ArrayList<>();
 
     public Offer(long id) {
         this.id = id;
-        this.bids = new ArrayList<>();
     }
 
     public Offer(String title) {
         this.title = title;
-        this.bids = new ArrayList<>();
-
     }
 
     /**
@@ -94,6 +93,7 @@ public class Offer {
         }
 
         this.bids.add(bid);
+        bid.associateOffer(this);
         return true;
     }
 
@@ -242,6 +242,14 @@ public class Offer {
 
     public void setValueHighestBid(int valueHighestBid) {
         this.valueHighestBid = valueHighestBid;
+    }
+
+    public List<Bid> getBids() {
+        return this.bids;
+    }
+
+    public void setBids(List<Bid> newBids) {
+        this.bids = newBids;
     }
 
     @Override

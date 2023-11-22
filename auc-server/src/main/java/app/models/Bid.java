@@ -1,5 +1,8 @@
 package app.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -13,6 +16,7 @@ public class Bid {
     private double value;
 
     @ManyToOne
+    @JsonBackReference
     private Offer offer;
 
     public Bid(long id, double value) {
@@ -33,13 +37,14 @@ public class Bid {
     public boolean associateOffer(Offer offer) {
         if (this.offer == null) {
             this.offer = offer;
+            offer.associateBid(this);
             return true;
         }
 
         return false;
     }
 
-    public static Bid createSampleBid(Offer offer) {
+    public static Bid createSampleBid() {
         // Random value between 4000 and 10000.
         int randomValue = (int) (Math.random() * (10000 - 4000 + 1) + 4000);
 

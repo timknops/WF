@@ -10,6 +10,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.util.List;
+import java.util.Random;
 
 @SpringBootApplication
 public class AucServerApplication implements CommandLineRunner {
@@ -21,13 +22,11 @@ public class AucServerApplication implements CommandLineRunner {
     @Autowired
     OffersRepository<Offer> offersRepo;
 
-    @Autowired
-    OffersRepository<Bid> bidsRepo;
-
     @Override
     @Transactional
     public void run(String... args) throws Exception {
         this.createSampleOffers();
+        this.createSampleBids();
     }
 
     private void createSampleOffers() {
@@ -40,13 +39,27 @@ public class AucServerApplication implements CommandLineRunner {
         for (int i = 0; i < AMOUNT_OF_OFFERS; i++) {
             Offer offer = Offer.createSampleOffer(0);
             offersRepo.save(offer);
-
-            for (int j = 0; j < 3; j++) {
-                Bid bid = Bid.createSampleBid(offer);
-                bidsRepo.save(bid);
-
-                offer.associateBid(bid);
-            }
         }
+    }
+
+    @Autowired
+    OffersRepository<Bid> bidsRepo;
+
+    private static Random randomizer = new Random();
+
+    private void createSampleBids() {
+        List<Bid> bidsList = this.bidsRepo.findAll();
+
+        if (!bidsList.isEmpty()) {
+            return;
+        }
+
+        List<Offer> offersList = this.offersRepo.findAll();
+        for (int i = 0; i < 15; i++) {
+            Bid savedBid = this.bidsRepo.save(Bid.createSampleBid());
+            Offer randomOffer = offersList.get(randomizer.nextInt(offersList.size()));
+            savedBid.associateOffer(randomOffer);
+        }
+
     }
 }
