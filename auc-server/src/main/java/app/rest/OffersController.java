@@ -7,6 +7,8 @@ import app.models.Offer;
 import app.models.ViewClasses;
 import app.models.Offer.Status;
 import app.repositories.OffersRepository;
+import jakarta.transaction.Transactional;
+
 import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -85,20 +87,23 @@ public class OffersController {
     @Autowired
     OffersRepository<Bid> bidsRepo;
 
+    @Transactional
     @PostMapping(path = "{id}/bids", produces = { "application/json" })
     public ResponseEntity<Bid> addBidToOffer(@PathVariable long id, @RequestBody Bid bid)
             throws PreConditionFailedException {
 
         Offer offer = offersRepo.findById(id);
-        if (offer.getStatus() != Status.FOR_SALE) {
+        if (offer.getStatus() != Status.FOR_SALE) { // If the offer status is not FOR_SALE, throw an exception.
             throw new PreConditionFailedException("Cannot add bid to offer with status " + offer.getStatus());
-        } else if (bid.getValue() < offer.getValueHighestBid()) {
+        } else if (bid.getValue() <= offer.getValueHighestBid()) { // If the bid value is lower than the highest bid
+                                                                   // value, throw an exception.
             throw new PreConditionFailedException("Cannot add bid with value " + bid.getValue()
                     + " to offer with highest bid value " + offer.getValueHighestBid());
         }
 
-        Bid savedBid = bidsRepo.save(bid);
-        savedBid.associateOffer(offer); // IDK?
+        // Save the bid and associate it with the offer.
+        Bid savedBid = this.bidsRepo.save(bid);
+        savedBid.associateOffer(offer);
 
         return ResponseEntity.ok().body(savedBid);
     }
