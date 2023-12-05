@@ -2,6 +2,7 @@ package app;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -13,7 +14,7 @@ public class WebConfig implements WebMvcConfigurer {
     public static final String IP_FORWARDED_FOR = "X-Forwarded-For";
 
     // path prefixes that will be protected by the authentication filter
-    public Set<String> SECURED_PATHS = Set.of("/accounts");
+    public Set<String> SECURED_PATHS = Set.of("/offers", "/bids", "/accounts");
 
     // A variable reboot signature can be used as an additional security layer in
     // authentication tokens.
@@ -39,8 +40,10 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addMapping("/**") // all endpoints
                 .allowedOriginPatterns("http://localhost:*", getHostIPAddressPattern(), "http://*.hva.nl:*") // all
                                                                                                              // origins
-                .allowedMethods("GET", "POST", "PUT", "DELETE"); // all methods
-
+                .allowedMethods("GET", "POST", "PUT", "DELETE") // all methods
+                .allowedHeaders(HttpHeaders.AUTHORIZATION, HttpHeaders.CONTENT_TYPE, IP_FORWARDED_FOR)
+                .exposedHeaders(HttpHeaders.AUTHORIZATION, HttpHeaders.CONTENT_TYPE, IP_FORWARDED_FOR)
+                .allowCredentials(true);
     }
 
     /**

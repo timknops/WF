@@ -84,14 +84,18 @@ public class JWToken {
     public static JWToken decode(String token, String issuer, String passphrase)
             throws ExpiredJwtException, MalformedJwtException {
         Key key = getKey(passphrase);
+
+        // Parse the token and extract the claims.
         Jws<Claims> jws = Jwts.parserBuilder().setSigningKey(key).build()
                 .parseClaimsJws(token);
         Claims claims = jws.getBody();
 
+        // Check if the token is expired.
         if (!claims.get(JWT_ISSUER_CLAIM).toString().equals(issuer)) {
             throw new MalformedJwtException("Invalid issuer");
         }
 
+        // Create a JWToken object from the claims.
         JWToken jwToken = new JWToken(
                 claims.get(JWT_CALLNAME_CLAIM).toString(),
                 Long.valueOf(claims.get(JWT_ACCOUNTID_CLAIM).toString()),
@@ -167,6 +171,7 @@ public class JWToken {
             ipAddress = request.getHeader(WebConfig.IP_FORWARDED_FOR);
         }
 
+        // If the IP-Forwarded-For header is not present, use the remote address.
         if (ipAddress == null) {
             ipAddress = request.getRemoteAddr();
         }
