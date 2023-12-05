@@ -2,7 +2,7 @@ package app;
 
 import app.models.Bid;
 import app.models.Offer;
-import app.repositories.OffersRepository;
+import app.repositories.EntityRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -20,7 +20,7 @@ public class AucServerApplication implements CommandLineRunner {
     }
 
     @Autowired
-    OffersRepository<Offer> offersRepo;
+    EntityRepository<Offer> offersRepo;
 
     @Override
     @Transactional
@@ -43,7 +43,7 @@ public class AucServerApplication implements CommandLineRunner {
     }
 
     @Autowired
-    OffersRepository<Bid> bidsRepo;
+    EntityRepository<Bid> bidsRepo;
 
     private static Random randomizer = new Random();
 

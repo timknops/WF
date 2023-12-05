@@ -3,7 +3,7 @@ package app.repositories;
 import java.util.List;
 
 
-public interface OffersRepository<E> {
+public interface EntityRepository<E> {
 
     /**
      * find all available items
@@ -31,4 +31,13 @@ public interface OffersRepository<E> {
      * @return the item which was deleted, or null if the item didn't exists
      */
     E deleteById(long id);
+
+    /**
+     * Find items for a certain query
+     * @param jpqlQuery the name of the namedQuery to be executed
+     * @param params The parameters to be correctly added to the query
+     * @return a list of items
+     */
+    List<E> findByQuery(String jpqlQuery, Object ...params);
+
 }

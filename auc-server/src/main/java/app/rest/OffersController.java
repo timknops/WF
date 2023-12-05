@@ -6,7 +6,7 @@ import app.models.Bid;
 import app.models.Offer;
 import app.models.ViewClasses;
 import app.models.Offer.Status;
-import app.repositories.OffersRepository;
+import app.repositories.EntityRepository;
 import jakarta.transaction.Transactional;
 
 import com.fasterxml.jackson.annotation.JsonView;
@@ -23,7 +23,7 @@ import java.util.List;
 public class OffersController {
 
     @Autowired
-    OffersRepository<Offer> offersRepo;
+    EntityRepository<Offer> offersRepo;
 
     @GetMapping(path = "/test", produces = "application/json")
     public List<Offer> getTestOffers() {
@@ -85,7 +85,7 @@ public class OffersController {
     }
 
     @Autowired
-    OffersRepository<Bid> bidsRepo;
+    EntityRepository<Bid> bidsRepo;
 
     @Transactional
     @PostMapping(path = "{id}/bids", produces = { "application/json" })

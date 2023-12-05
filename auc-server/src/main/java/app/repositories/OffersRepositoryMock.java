@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository("OFFERS.INMEMORY")
-public class OffersRepositoryMock implements OffersRepository<Offer> {
+public class OffersRepositoryMock implements EntityRepository<Offer> {
 
     private List<Offer> offers;
     private final long STARTING_ID = 3000;
@@ -57,5 +57,10 @@ public class OffersRepositoryMock implements OffersRepository<Offer> {
             offers.remove(toBeDeleted);
         }
         return toBeDeleted;
+    }
+
+    @Override
+    public List<Offer> findByQuery(String jpqlQuery, Object... params) {
+        return null;
     }
 }
