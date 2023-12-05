@@ -12,6 +12,22 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+
+
+@NamedQueries({
+        @NamedQuery(
+                name ="Offer_find_by_status",
+                query = "SELECT o FROM Offer o WHERE o.status = ?1 "
+        ),
+        @NamedQuery(
+                name = "Offer_find_by_title",
+                query = "SELECT o FROM Offer o WHERE o.title LIKE CONCAT('%', ?1, '%') "
+        ),
+        @NamedQuery(
+                name= "Offer_find_by_status_and_minBidValue",
+                query = "SELECT o FROM Offer o WHERE o.status = ?1 AND o.valueHighestBid >= ?2"
+        )
+})
 /**
  * Modal for an offer
  *
