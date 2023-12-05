@@ -1,5 +1,6 @@
 package app.rest;
 
+import app.exceptions.BadRequestException;
 import app.exceptions.PreConditionFailedException;
 import app.exceptions.ResourceNotFoundException;
 import app.models.Bid;
@@ -31,7 +32,28 @@ public class OffersController {
     }
 
     @GetMapping(path = "", produces = "application/json")
-    public List<Offer> getAllOffers() {
+    public List<Offer> getAllOffers(
+            @RequestParam(required = false) String title,
+            @RequestParam(required = false) String status,
+            @RequestParam(required = false) Integer minBidValue) {
+        System.out.println(status);
+
+        //title can only be used on its own
+        if (title != null && (minBidValue != null || status != null)) {
+            throw new BadRequestException("Cannot handle your combination of request parameters, title can't be combined with other parameters");
+        }
+
+        //check if status is valid
+        if (status != null && !Offer.Status.isValid(status) ){
+            throw new BadRequestException(String.format("status=%s is not a valid offer status", status));
+        }
+
+
+        if (minBidValue != null && status == null) {
+            throw new BadRequestException(
+                    "Cannot handle your combination of request parameters, minBidValue should always be in combination with status");
+        }
+
         return this.offersRepo.findAll();
     }
 

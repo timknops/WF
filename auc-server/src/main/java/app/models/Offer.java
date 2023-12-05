@@ -296,6 +296,20 @@ public class Offer {
         DELIVERED,
         CLOSED,
         EXPIRED,
-        WITHDRAWN
+        WITHDRAWN;
+
+        /**
+         * Check if a status is correct
+         * @param status a string representation
+         * @return true, if status is valid otherwise false
+         */
+        public static boolean isValid(String status) {
+            try {
+                Status.valueOf(status.toUpperCase());
+                return true;
+            } catch (IllegalArgumentException exception) {
+                return false;
+            }
+        }
     }
 }
