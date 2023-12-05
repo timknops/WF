@@ -31,12 +31,21 @@ public class OffersController {
         return List.of(Offer.createSampleOffer(3000), new Offer(3001), new Offer("Titel"));
     }
 
+    /**
+     * Find all offer or find a filtered list of offers depending on the query parameters
+     * @param title  a substring of an offer title
+     * @param status a status of an offer
+     * @param minBidValue  the minimal bid value a offer should have
+     * @return A list of offers
+     * @throws BadRequestException if title is in combination with another query param,
+     * if the status doesn't exist, if minBidValue isn't in combination status
+     */
     @GetMapping(path = "", produces = "application/json")
     public List<Offer> getAllOffers(
             @RequestParam(required = false) String title,
             @RequestParam(required = false) String status,
-            @RequestParam(required = false) Integer minBidValue) {
-        System.out.println(status);
+            @RequestParam(required = false) Integer minBidValue)
+            throws BadRequestException {
 
         //title can only be used on its own
         if (title != null && (minBidValue != null || status != null)) {
@@ -48,12 +57,28 @@ public class OffersController {
             throw new BadRequestException(String.format("status=%s is not a valid offer status", status));
         }
 
-
+        //min bid should always be in combination with status
         if (minBidValue != null && status == null) {
             throw new BadRequestException(
                     "Cannot handle your combination of request parameters, minBidValue should always be in combination with status");
         }
 
+        //find offers by status and min bid
+        if (status != null && minBidValue != null) {
+            return this.offersRepo.findByQuery("Offer_find_by_status_and_minBidValue", status, minBidValue);
+        }
+
+        //find offers by status
+        if (status != null) {
+            return this.offersRepo.findByQuery("Offer_find_by_status", status);
+        }
+
+        //find offers by title
+        if (title != null) {
+            return this.offersRepo.findByQuery("Offer_find_by_title", title);
+        }
+
+        //find all offers as a default
         return this.offersRepo.findAll();
     }
 

@@ -54,7 +54,7 @@ public class OffersRepositoryJpa implements EntityRepository<Offer> {
         for (int i = 0; i < params.length; i++) {
             //set all params to the correct ordinal position.
             //Ordinal parameter position start counting from 1
-            query.setParameter(i + 1, params[0]);
+            query.setParameter(i + 1, params[i]);
         }
         return query.getResultList();
     }

@@ -17,15 +17,15 @@ import java.util.Objects;
 @NamedQueries({
         @NamedQuery(
                 name ="Offer_find_by_status",
-                query = "SELECT o FROM Offer o WHERE o.status = ?1 "
+                query = "SELECT o FROM Offer o WHERE o.status = upper(?1) "
         ),
         @NamedQuery(
                 name = "Offer_find_by_title",
-                query = "SELECT o FROM Offer o WHERE o.title LIKE CONCAT('%', ?1, '%') "
+                query = "SELECT o FROM Offer o WHERE LOWER(o.title) LIKE LOWER(CONCAT('%', ?1, '%'))"
         ),
         @NamedQuery(
                 name= "Offer_find_by_status_and_minBidValue",
-                query = "SELECT o FROM Offer o WHERE o.status = ?1 AND o.valueHighestBid >= ?2"
+                query = "SELECT o FROM Offer o WHERE o.status = Upper(?1) AND o.valueHighestBid >= ?2"
         )
 })
 /**
