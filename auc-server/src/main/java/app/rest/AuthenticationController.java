@@ -12,8 +12,12 @@ import app.WebConfig;
 import app.exceptions.NotAcceptableException;
 import app.models.Account;
 import app.models.ViewClasses;
+import app.repositories.AccountsRepositoryJpa;
 import app.repositories.EntityRepository;
+import app.security.JWToken;
 import jakarta.servlet.http.HttpServletRequest;
+
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -29,26 +33,37 @@ public class AuthenticationController {
     WebConfig webConfig;
 
     @Autowired
-    EntityRepository<Account> accountsRepo;
+    AccountsRepositoryJpa accountsRepo;
 
     @JsonView(ViewClasses.Summary.class)
     @PostMapping(path = "/login")
     public ResponseEntity<Account> authenticateAccount(@RequestBody ObjectNode loginInfo,
             HttpServletRequest request) throws NotAcceptableException {
 
-        String username = loginInfo.get("email").asText();
+        String email = loginInfo.get("email").asText();
         String password = loginInfo.get("password").asText();
 
-        Account account = accountsRepo.findAll().stream().filter(a -> a.getEmail().equals(username))
-                .findFirst().orElse(null);
-
-        if (account == null || !account.verifyPassword(password)) {
-            throw new NotAcceptableException("Invalid username or password.");
+        // Check whether we need and have the source IP-address of the user.
+        String ipAddress = JWToken.getIpAddress(request);
+        if (ipAddress == null) {
+            throw new NotAcceptableException("Cannot identify your source IP-Address.");
         }
 
-        // TODO add token generation
-        // TODO add token string to response header
-        return ResponseEntity.accepted().header(HttpHeaders.AUTHORIZATION, "Bearer " + "token")
+        // Check whether the user exists and the password is correct.
+        List<Account> accounts = this.accountsRepo.findByEmail(email);
+        Account account = accounts.isEmpty() ? null : accounts.get(0);
+
+        if (account == null || !account.verifyPassword(password)) {
+            throw new NotAcceptableException("Invalid email or password.");
+        }
+
+        // Token generation.
+        JWToken jwToken = new JWToken(account.getName(), account.getId(), account.getRole(), ipAddress);
+        String tokenString = jwToken.encode(this.webConfig.getIssuer(),
+                this.webConfig.getPassphrase(),
+                this.webConfig.getTokenDurationOfValidity());
+
+        return ResponseEntity.accepted().header(HttpHeaders.AUTHORIZATION, "Bearer " + tokenString)
                 .body(account);
     }
 }

@@ -35,4 +35,13 @@ public interface EntityRepository<E> {
      * @return the item which was deleted, or null if the item didn't exists
      */
     E deleteById(long id);
+
+    /**
+     * Find items by a query
+     * 
+     * @param jpqlName the name of the query
+     * @param params   the parameters of the query
+     * @return a list of items
+     */
+    List<E> findByQuery(String jpqlName, Object... params);
 }
