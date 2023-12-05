@@ -58,4 +58,9 @@ public class OffersRepositoryMock implements EntityRepository<Offer> {
         }
         return toBeDeleted;
     }
+
+    @Override
+    public List<Offer> findByQuery(String jpqlQuery, Object... params) {
+        return null;
+    }
 }

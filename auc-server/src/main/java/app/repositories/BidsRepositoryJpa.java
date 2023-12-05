@@ -40,4 +40,9 @@ public class BidsRepositoryJpa implements EntityRepository<Bid> {
         entityManager.remove(toBeDeleted);
         return toBeDeleted;
     }
+
+    @Override
+    public List<Bid> findByQuery(String jpqlQuery, Object... params) {
+        return null;
+    }
 }

@@ -3,9 +3,9 @@ package app.repositories;
 import java.util.List;
 
 public interface EntityRepository<E> {
-
     /**
-     * find all available items
+     * ind all available items
+
      * 
      * @return a list of items
      */
@@ -37,11 +37,11 @@ public interface EntityRepository<E> {
     E deleteById(long id);
 
     /**
-     * Find items by a query
+     * Find items for a certain query
+     * @param jpqlQuery the name of the namedQuery to be executed
+     * @param params The parameters to be correctly added to the query
      * 
-     * @param jpqlName the name of the query
-     * @param params   the parameters of the query
-     * @return a list of items
-     */
-    List<E> findByQuery(String jpqlName, Object... params);
+     *      */
+    List<E> findByQuery(String jpqlQuery, Object ...params);
+
 }
