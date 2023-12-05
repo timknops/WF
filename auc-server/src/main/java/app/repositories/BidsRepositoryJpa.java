@@ -13,7 +13,7 @@ import java.util.List;
 @Repository("BIDS.JPA")
 @Transactional
 @Primary
-public class BidsRepositoryJpa implements OffersRepository<Bid> {
+public class BidsRepositoryJpa implements EntityRepository<Bid> {
 
     @PersistenceContext
     private EntityManager entityManager;

@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository("OFFERS.INMEMORY")
-public class OffersRepositoryMock implements OffersRepository<Offer> {
+public class OffersRepositoryMock implements EntityRepository<Offer> {
 
     private List<Offer> offers;
     private final long STARTING_ID = 3000;
@@ -40,7 +40,7 @@ public class OffersRepositoryMock implements OffersRepository<Offer> {
         if (index != -1) {
             offers.set(index, item);
         } else {
-            //if no id was given by the user generate the new id.
+            // if no id was given by the user generate the new id.
             if (item.getId() == 0) {
                 item.setId(currentId);
                 currentId += 3;

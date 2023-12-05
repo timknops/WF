@@ -13,7 +13,7 @@ import java.util.List;
 @Repository("AUTHORS.JPA")
 @Transactional
 @Primary
-public class OffersRepositoryJpa implements OffersRepository<Offer>{
+public class OffersRepositoryJpa implements EntityRepository<Offer> {
 
     @PersistenceContext
     private EntityManager entityManager;
