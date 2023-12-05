@@ -80,7 +80,7 @@ public class AucServerApplication implements CommandLineRunner {
         accountsList.add(this.accountsRepo.save(new Account("user3@hva.nl", "user")));
 
         for (Account u : accountsList) {
-            u.setHashedPassword("welcome");
+            u.setPassword("welcome");
             System.out.println("Added user: " + u + " (initial password = 'welcome')");
         }
 

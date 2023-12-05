@@ -1,5 +1,6 @@
 package app.security;
 
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
@@ -19,7 +20,12 @@ public class SecureHasher {
     try {
       // Apply the secret salt to the algorithm.
       MessageDigest md = MessageDigest.getInstance(algorithm);
-      md.update(secretSalt.getBytes());
+
+      // Append the secret salt to the algorithm.
+      md.update(String.format("%-16s", secretSalt).getBytes(StandardCharsets.UTF_8));
+
+      // Reset the MessageDigest instance to its initial state.
+      md.reset();
 
       return md;
     } catch (NoSuchAlgorithmException e) {

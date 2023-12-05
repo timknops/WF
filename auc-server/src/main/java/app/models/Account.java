@@ -1,5 +1,7 @@
 package app.models;
 
+import com.fasterxml.jackson.annotation.JsonView;
+
 import app.security.SecureHasher;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -13,10 +15,18 @@ public class Account {
   @Id
   @SequenceGenerator(name = "user_generator")
   @GeneratedValue(generator = "user_generator", strategy = GenerationType.SEQUENCE)
+  @JsonView(ViewClasses.Summary.class)
   private long id;
+
+  @JsonView(ViewClasses.Summary.class)
   private String name;
+
+  @JsonView(ViewClasses.Summary.class)
   private String email;
+
   private String hashedPassword = null;
+
+  @JsonView(ViewClasses.Summary.class)
   private String role;
 
   public Account(String email, String role) {
@@ -58,6 +68,10 @@ public class Account {
 
   public void setPassword(String newPassword) {
     this.setHashedPassword(this.hashPassword(newPassword));
+  }
+
+  public boolean verifyPassword(String password) {
+    return this.hashedPassword.equals(this.hashPassword(password));
   }
 
   public String getHashedPassword() {
