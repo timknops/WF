@@ -20,6 +20,7 @@ export class SessionSbService {
     // e.g. after a page reload or when a new tab is opened.
     this.getTokenFromBrowserStorage();
   }
+
   get currentToken() {
     return this._currentToken;
   }
@@ -31,6 +32,7 @@ export class SessionSbService {
   isAdmin() {
     return this._currentAccount?.role?.toLowerCase().includes("admin");
   }
+
   isAuthenticated() {
     return this._currentAccount != null;
   }
@@ -38,7 +40,7 @@ export class SessionSbService {
   getTokenFromBrowserStorage() {
     if (this._currentToken != null) return this._currentToken
     this._currentToken = window.sessionStorage.getItem(this.BROWSER_STORAGE_ITEM_NAME);
-    let jsonAccount = window.sessionStorage.getItem(this.BROWSER_STORAGE_ITEM_NAME+"_ACC");
+    let jsonAccount = window.sessionStorage.getItem(this.BROWSER_STORAGE_ITEM_NAME + "_ACC");
 
     //if account object exists in browser storage, parse the json back to javascript datatypes
     if (jsonAccount != null) {
@@ -56,21 +58,21 @@ export class SessionSbService {
     if (token == null) {
       this._currentAccount = null;
       window.sessionStorage.removeItem(this.BROWSER_STORAGE_ITEM_NAME);
-      window.sessionStorage.removeItem(this.BROWSER_STORAGE_ITEM_NAME+"_ACC");
+      window.sessionStorage.removeItem(this.BROWSER_STORAGE_ITEM_NAME + "_ACC");
 
     } else {
       console.log("New token for " + account.name + ": " + token);
       window.sessionStorage.setItem(this.BROWSER_STORAGE_ITEM_NAME, token);
-      window.sessionStorage.setItem(this.BROWSER_STORAGE_ITEM_NAME+"_ACC", JSON.stringify(account));
+      window.sessionStorage.setItem(this.BROWSER_STORAGE_ITEM_NAME + "_ACC", JSON.stringify(account));
     }
   }
 
   async asyncSignIn(email, password) {
-    const body = JSON.stringify({ email: email, password: password });
+    const body = JSON.stringify({email: email, password: password});
     let response = await fetch(this.RESOURCES_URL + "/login",
       {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {'Content-Type': 'application/json'},
         body: body
       })
     if (response.ok) {
@@ -80,8 +82,7 @@ export class SessionSbService {
         account);
       return account;
     } else {
-      console.log(response)
-      return null;
+      throw response;
     }
   }
 
