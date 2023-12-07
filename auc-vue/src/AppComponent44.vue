@@ -6,7 +6,7 @@
 
 <script>
 import HeaderComponent from "./components/HeaderSbComponent.vue";
-import NavBar from "@/components/NavBar.vue";
+import NavBar from "@/components/NavBarSb.vue";
 import { OffersAdaptor } from "@/service/offersAdaptor";
 import Config from "@/config.js";
 import {SessionSbService} from "@/service/sessionSbService";

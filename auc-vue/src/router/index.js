@@ -34,6 +34,12 @@ const routes = [
     path: "/sign-in",
     component: SignIn
   },
+  {
+    path: "/sign-out",
+    redirect: () => {
+      return {path: '/sign-in', query: {signOf : true}}
+    }
+  },
   { path: "/:pregMatch(.*)", component: UnknownRoute },
 ];
 
