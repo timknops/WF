@@ -26,7 +26,7 @@ export class FetchInterceptor {
   }
 
   response(response) {
-    FetchInterceptor.theInstance.tryRecoverNewJWToken(response);
+    // FetchInterceptor.theInstance.tryRecoverNewJWToken(response);
 
     if (response.status >= 400 && response.status < 600) {
       FetchInterceptor.theInstance.handleErrorInResponse(response);
@@ -46,21 +46,21 @@ export class FetchInterceptor {
     if (response.status === 401) {
       // If the response is a 401 we redirect to the login page.
       this.router.push("/sign-in");
-    } else {
+    } else if (response.status !== 406) {
       // If the response is not a 401, we throw the error.
       throw response;
     }
   }
 
-  /** Recover a new token, if any */
-  async tryRecoverNewJWToken(response) {
-    const newToken = response.headers.get("Authorization");
-
-    if (newToken) {
-      FetchInterceptor.theInstance.sessionService.saveTokenIntoBrowserStorage(
-        newToken,
-        FetchInterceptor.theInstance.sessionService.currentAccount
-      );
-    }
-  }
+  // /** Recover a new token, if any */
+  // tryRecoverNewJWToken(response) {
+  //   console.log(response)
+  //   // const newToken = response.headers.get("Authorization");
+  //   // if (newToken) {
+  //   //   FetchInterceptor.theInstance.sessionService.saveTokenIntoBrowserStorage(
+  //   //     newToken,
+  //   //     FetchInterceptor.theInstance.sessionService.currentAccount
+  //   //   );
+  //   // }
+  // }
 }
