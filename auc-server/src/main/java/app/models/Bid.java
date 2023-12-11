@@ -1,9 +1,13 @@
 package app.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
+
+import java.util.Objects;
 
 @Entity
 public class Bid {
@@ -16,8 +20,13 @@ public class Bid {
     private double value;
 
     @ManyToOne
-    @JsonBackReference
+    @JsonIncludeProperties(value = {"id", "title", "status"})
     private Offer offer;
+
+    @ManyToOne
+    @JsonManagedReference
+    @JsonIncludeProperties(value = {"id","name"})
+    private Account madeBy;
 
     public Bid(long id, double value) {
         this.id = id;
@@ -27,9 +36,10 @@ public class Bid {
     public Bid() {
     }
 
+
     /**
      * Associates this bid with an offer, if the offer is not already associated.
-     * 
+     *
      * @param offer the offer to associate with
      * @return true if the offer was associated, false if the offer was already
      *         associated
@@ -41,6 +51,15 @@ public class Bid {
             return true;
         }
 
+        return false;
+    }
+
+    public boolean associateAccount(Account account) {
+        if (this.madeBy == null) {
+            this.madeBy = account;
+
+            return true;
+        }
         return false;
     }
 
@@ -63,6 +82,15 @@ public class Bid {
         return offer;
     }
 
+    public Account getMadeBy() {
+        return madeBy;
+    }
+
+    public void setMadeBy(Account madeBy) {
+        this.madeBy = madeBy;
+    }
+
+
     public void setId(long id) {
         this.id = id;
     }
@@ -75,4 +103,15 @@ public class Bid {
         this.offer = offer;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Bid bid)) return false;
+        return getId() == bid.getId();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId());
+    }
 }

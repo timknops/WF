@@ -33,8 +33,8 @@ public class AucServerApplication implements CommandLineRunner {
     @Transactional
     public void run(String... args) throws Exception {
         this.createSampleOffers();
-        this.createSampleBids();
         this.createSampleAccounts();
+        this.createSampleBids();
     }
 
     private void createSampleOffers() {
@@ -46,26 +46,15 @@ public class AucServerApplication implements CommandLineRunner {
 
         for (int i = 0; i < AMOUNT_OF_OFFERS; i++) {
             Offer offer = Offer.createSampleOffer(0);
+            if (i <=3) {
+                offer.setStatus(Offer.Status.FOR_SALE);
+            }
             offersRepo.save(offer);
         }
     }
 
     private static Random randomizer = new Random();
 
-    private void createSampleBids() {
-        List<Bid> bidsList = this.bidsRepo.findAll();
-
-        if (!bidsList.isEmpty()) {
-            return;
-        }
-
-        List<Offer> offersList = this.offersRepo.findAll();
-        for (int i = 0; i < 15; i++) {
-            Bid savedBid = this.bidsRepo.save(Bid.createSampleBid());
-            Offer randomOffer = offersList.get(randomizer.nextInt(offersList.size()));
-            savedBid.associateOffer(randomOffer);
-        }
-    }
 
     private void createSampleAccounts() {
         List<Account> accountsList = this.accountsRepo.findAll();
@@ -84,5 +73,22 @@ public class AucServerApplication implements CommandLineRunner {
             System.out.println("Added user: " + u + " (initial password = 'welcome')");
         }
 
+    }
+    private void createSampleBids() {
+        List<Bid> bidsList = this.bidsRepo.findAll();
+
+        if (!bidsList.isEmpty()) {
+            return;
+        }
+
+        List<Offer> offersList = this.offersRepo.findAll();
+        List<Account> accounts = this.accountsRepo.findAll();
+        for (int i = 0; i < 15; i++) {
+            Bid savedBid = this.bidsRepo.save(Bid.createSampleBid());
+            Offer randomOffer = offersList.get(randomizer.nextInt(offersList.size()));
+            Account randomAccount = accounts.get(randomizer.nextInt(accounts.size()));
+            savedBid.associateOffer(randomOffer);
+            savedBid.associateAccount(randomAccount);
+        }
     }
 }

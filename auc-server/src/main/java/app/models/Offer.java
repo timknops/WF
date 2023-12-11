@@ -1,6 +1,7 @@
 package app.models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
@@ -78,7 +79,7 @@ public class Offer {
     private int valueHighestBid;
 
     @OneToMany(mappedBy = "offer")
-    @JsonManagedReference
+    @JsonIncludeProperties(value = {"id", "value", "madeBy"})
     private List<Bid> bids = new ArrayList<>();
 
     public Offer(long id) {

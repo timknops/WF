@@ -1,13 +1,12 @@
 package app.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import app.security.SecureHasher;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.*;
+
+import java.util.List;
 
 @Entity
 public class Account {
@@ -29,6 +28,10 @@ public class Account {
   @JsonView(ViewClasses.Summary.class)
   private String role;
 
+  @OneToMany(mappedBy = "madeBy")
+  @JsonBackReference
+  private List<Bid> bids;
+
   public Account(String email, String role) {
     this.name = email.split("@")[0];
     this.email = email;
@@ -36,6 +39,16 @@ public class Account {
   }
 
   public Account() {
+  }
+
+  public boolean associateBid(Bid bid) {
+    if(this.bids.contains(bid)) {
+      return false;
+    }
+
+    bids.add(bid);
+    bid.associateAccount(this);
+    return true;
   }
 
   public long getId() {
