@@ -71,16 +71,26 @@ public class Offer {
     @JsonView(ViewClasses.Summary.class)
     private Status status;
 
+    @JsonView(ViewClasses.FindAll.class)
     private String description;
 
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", shape = JsonFormat.Shape.STRING, timezone = "Europe/Amsterdam")
+    @JsonView(ViewClasses.FindAll.class)
     private LocalDateTime sellDate;
 
+    @JsonView(ViewClasses.FindAll.class)
     private int valueHighestBid;
 
-    @OneToMany(mappedBy = "offer")
+    @OneToMany(mappedBy = "offer", cascade = CascadeType.REMOVE)
+    @JsonView(ViewClasses.FindOne.class)
     @JsonIncludeProperties(value = {"id", "value", "madeBy"})
     private List<Bid> bids = new ArrayList<>();
+
+    @Transient
+    @JsonView(ViewClasses.FindAll.class)
+    public int numberOfBids() {
+        return this.bids.size();
+    }
 
     public Offer(long id) {
         this.id = id;

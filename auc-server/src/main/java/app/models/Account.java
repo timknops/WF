@@ -1,6 +1,7 @@
 package app.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import app.security.SecureHasher;
@@ -29,7 +30,7 @@ public class Account {
   private String role;
 
   @OneToMany(mappedBy = "madeBy")
-  @JsonBackReference
+  @JsonIgnore
   private List<Bid> bids;
 
   public Account(String email, String role) {

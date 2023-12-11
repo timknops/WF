@@ -41,6 +41,7 @@ public class OffersController {
      * if the status doesn't exist, if minBidValue isn't in combination status
      */
     @GetMapping(path = "", produces = "application/json")
+    @JsonView(ViewClasses.FindAll.class)
     public List<Offer> getAllOffers(
             @RequestParam(required = false) String title,
             @RequestParam(required = false) String status,
@@ -89,6 +90,7 @@ public class OffersController {
     }
 
     @GetMapping(path = "{id}", produces = "application/json")
+    @JsonView(ViewClasses.FindOne.class)
     public Offer getOffer(@PathVariable long id) throws ResourceNotFoundException {
         Offer offer = offersRepo.findById(id);
 

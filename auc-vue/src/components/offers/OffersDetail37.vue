@@ -201,7 +201,7 @@ export default {
       this.continueButtonAction();
     },
 
-    continueButtonAction() {
+    async continueButtonAction() {
       switch (this.currentButtonClicked) {
         case this.CLICKED_BUTTON_OPTIONS.CANCEL:
           this.leaveValidated = true;
@@ -218,7 +218,7 @@ export default {
           break;
 
         case this.CLICKED_BUTTON_OPTIONS.DELETE:
-          this.offersService.asyncDeleteById(this.selectedOffer.id);
+          await this.offersService.asyncDeleteById(this.selectedOffer.id);
           this.$router.push(this.$route.matched[0].path);
           this.$emit("refresh-offers");
           break;

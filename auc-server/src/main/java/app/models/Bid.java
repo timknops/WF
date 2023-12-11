@@ -15,8 +15,10 @@ public class Bid {
     @Id
     @SequenceGenerator(name = "bids_id", initialValue = 1000)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "bids_id")
+    @JsonView(ViewClasses.FindAll.class)
     private long id;
 
+    @JsonView(ViewClasses.FindAll.class)
     private double value;
 
     @ManyToOne
@@ -24,8 +26,8 @@ public class Bid {
     private Offer offer;
 
     @ManyToOne
-    @JsonManagedReference
     @JsonIncludeProperties(value = {"id","name"})
+    @JsonView(ViewClasses.FindAll.class)
     private Account madeBy;
 
     public Bid(long id, double value) {
