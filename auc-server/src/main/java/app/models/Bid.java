@@ -59,7 +59,7 @@ public class Bid {
     public boolean associateAccount(Account account) {
         if (this.madeBy == null) {
             this.madeBy = account;
-
+            account.associateBid(this);
             return true;
         }
         return false;

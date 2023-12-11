@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import app.security.SecureHasher;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -31,7 +32,7 @@ public class Account {
 
   @OneToMany(mappedBy = "madeBy")
   @JsonIgnore
-  private List<Bid> bids;
+  private List<Bid> bids = new ArrayList<>();
 
   public Account(String email, String role) {
     this.name = email.split("@")[0];
@@ -102,6 +103,14 @@ public class Account {
 
   public void setRole(String newRole) {
     this.role = newRole;
+  }
+
+  public List<Bid> getBids() {
+    return bids;
+  }
+
+  public void setBids(List<Bid> bids) {
+    this.bids = bids;
   }
 
   @Override
