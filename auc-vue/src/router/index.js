@@ -8,6 +8,7 @@ import OffersDetail32 from "@/components/offers/OffersDetail32.vue";
 import OffersDetail34 from "@/components/offers/OffersDetail34.vue";
 import OffersOverview37 from "@/components/offers/OffersOverview37.vue";
 import OffersDetail37 from "@/components/offers/OffersDetail37.vue";
+import SignIn from "@/components/SignIn.vue";
 
 const routes = [
   { path: "/", redirect: "/home" },
@@ -28,6 +29,16 @@ const routes = [
     path: "/offers/overview37",
     component: OffersOverview37,
     children: [{ path: ":id", component: OffersDetail37 }],
+  },
+  {
+    path: "/sign-in",
+    component: SignIn
+  },
+  {
+    path: "/sign-out",
+    redirect: () => {
+      return {path: '/sign-in', query: {signOf : true}}
+    }
   },
   { path: "/:pregMatch(.*)", component: UnknownRoute },
 ];
