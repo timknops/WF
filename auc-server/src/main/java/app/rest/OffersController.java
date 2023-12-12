@@ -153,7 +153,7 @@ public class OffersController {
 
     @Transactional
     @PostMapping(path = "{id}/bids", produces = { "application/json" })
-    public ResponseEntity<Bid> addBidToOffer(@PathVariable long id, @RequestBody Bid bid)
+    public ResponseEntity<Map<String, Object>> addBidToOffer(@PathVariable long id, @RequestBody Bid bid)
             throws PreConditionFailedException {
 
         Offer offer = offersRepo.findById(id);
@@ -165,10 +165,18 @@ public class OffersController {
                     + " to offer with highest bid value " + offer.getValueHighestBid());
         }
 
+        // Add the new value highest bid to the offer.
+        offer.setValueHighestBid((int) bid.getValue());
+
         // Save the bid and associate it with the offer.
         Bid savedBid = this.bidsRepo.save(bid);
         savedBid.associateOffer(offer);
 
-        return ResponseEntity.ok().body(savedBid);
+        // Add the offer sellDate to the response.
+        Map<String, Object> response = new HashMap<>();
+        response.put("bid", savedBid);
+        response.put("sellDate", offer.getSellDate());
+
+        return ResponseEntity.ok().body(response);
     }
 }

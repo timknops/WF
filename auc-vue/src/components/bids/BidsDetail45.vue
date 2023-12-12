@@ -7,23 +7,23 @@
           <thead class="text-center">
             <tr class="sticky-top">
               <th colspan="2" scope="col">
-                Offer Details ID: {{ offerCopy.id }}
+                Offer Details ID: {{ selectedOffer.id }}
               </th>
             </tr>
           </thead>
           <tbody class="text-end">
             <tr>
               <th scope="row">Title</th>
-              <td class="text-start">{{ offerCopy.title }}</td>
+              <td class="text-start">{{ selectedOffer.title }}</td>
             </tr>
             <tr>
               <th scope="row">Description</th>
-              <td class="text-start">{{ offerCopy.description }}</td>
+              <td class="text-start">{{ selectedOffer.description }}</td>
             </tr>
             <tr>
               <th scope="row">Status</th>
               <td class="text-start">
-                {{ offerCopy.status }}
+                {{ selectedOffer.status }}
               </td>
             </tr>
             <tr>
@@ -55,15 +55,15 @@
         <button
           type="button"
           class="btn btn-primary"
-          @click="handleModal(CLICKED_BUTTON_OPTIONS.CANCEL, 0)"
+          @click="this.$router.push(this.$route.matched[0].path)"
         >
           Cancel
         </button>
         <button
           type="button"
           class="btn btn-success"
-          :disabled="newBidValue <= offerCopy.valueHighestBid"
-          @click="handleModal(CLICKED_BUTTON_OPTIONS.SAVE, 0)"
+          :disabled="newBidValue <= selectedOffer.valueHighestBid"
+          @click="handleSave()"
         >
           Save
         </button>
@@ -73,26 +73,13 @@
 </template>
 
 <script>
-import { Offer } from "@/models/offer";
-
 export default {
   name: "BidsDetail45",
-  emits: ["refresh-offers"],
-  inject: ["offersService"],
+  emits: ["refresh-offers", "confirm-bid"],
+  inject: ["offersService", "sessionService"],
   data() {
     return {
       selectedOffer: null,
-      offerCopy: Offer,
-      showModal: false,
-      modalTitle: "",
-      modalText: "",
-      currentButtonClicked: "",
-      CLICKED_BUTTON_OPTIONS: Object.freeze({
-        CANCEL: "CANCEL",
-        SAVE: "SAVE",
-      }),
-      navigateTo: "",
-      leaveValidated: false,
       newBidValue: 0,
     };
   },
@@ -105,24 +92,38 @@ export default {
         this.$route?.params?.id
       );
 
-      this.offerCopy = Offer.copyConstructor(this.selectedOffer);
-      this.newBidValue = this.offerCopy.valueHighestBid + 1;
+      // Set the initial bid value to the highest bid + 1.
+      this.newBidValue = this.selectedOffer.valueHighestBid + 1;
     },
 
     async handleSave() {
-      // If the title is empty, set it to "Empty Offer".
-      if (this.offerCopy.title === "") {
-        this.offerCopy.title = "Empty Offer";
+      const newBid = {
+        value: this.newBidValue,
+        offer: {
+          id: this.selectedOffer.id,
+        },
+        madeBy: {
+          id: this.sessionService.currentAccount.id,
+        },
+      };
+
+      try {
+        const bid = await this.offersService.asyncAddBid(newBid);
+
+        // If successful, emit the event to the parent component.
+        this.$emit("confirm-bid", bid);
+
+        // Push the user back to the overview.
+        this.$router.push(this.$route.matched[0].path);
+
+        this.$emit("refresh-offers");
+      } catch (error) {
+        console.error(error);
       }
-
-      await this.offersService.asyncSave(this.offerCopy);
-      this.$router.push(this.$route.matched[0].path);
-
-      this.$emit("refresh-offers"); // Refresh the offer list.
     },
 
     formatDateDisplay() {
-      if (this.offerCopy.sellDate === null) return;
+      if (this.selectedOffer.sellDate === null) return;
 
       /*because of timezones the displayed time is two hours lower.
       This is because of the Netherlands is two hours ahead from the greenwich time utc +0
@@ -130,8 +131,9 @@ export default {
        */
       const MILLISECONDS_IN_MINUTE = 60000;
       const timeOffsetInMilliseconds =
-        this.offerCopy.sellDate.getTime() +
-        this.offerCopy.sellDate.getTimezoneOffset() * MILLISECONDS_IN_MINUTE;
+        this.selectedOffer.sellDate.getTime() +
+        this.selectedOffer.sellDate.getTimezoneOffset() *
+          MILLISECONDS_IN_MINUTE;
       const dateWithOffset = new Date(timeOffsetInMilliseconds);
 
       return dateWithOffset.toLocaleDateString("en-IN", {
@@ -144,17 +146,6 @@ export default {
         hour12: false,
       });
     },
-
-    // Prevent user from leaving the page without saving changes.
-    beforeUnload(e) {
-      if (!this.leaveValidated && this.hasChanged) {
-        // Cancel the event.
-        e.preventDefault();
-
-        // Chrome requires returnValue to be set.
-        e.returnValue = "";
-      }
-    },
   },
   watch: {
     $route() {
@@ -165,29 +156,22 @@ export default {
   },
   computed: {
     latestBid() {
+      // If there is no selected offer, or the selected offer has no bids, return "No bids yet."
       if (
-        !this.offerCopy ||
-        !this.offerCopy.bids ||
-        this.offerCopy.bids.length === 0
+        !this.selectedOffer ||
+        !this.selectedOffer.bids ||
+        this.selectedOffer.bids.length === 0
       ) {
         return "No bids yet.";
       }
 
       // Find the highest bid.
-      const highestBid = this.offerCopy.bids.find(
-        (bid) => bid.value === this.offerCopy.valueHighestBid
+      const highestBid = this.selectedOffer.bids.find(
+        (bid) => bid.value === this.selectedOffer.valueHighestBid
       );
 
       return highestBid;
     },
-  },
-
-  mounted() {
-    window.addEventListener("beforeunload", this.beforeUnload);
-  },
-
-  beforeUnmount() {
-    window.removeEventListener("beforeunload", this.beforeUnload);
   },
 };
 </script>

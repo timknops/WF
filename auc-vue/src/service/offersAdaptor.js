@@ -90,4 +90,24 @@ export class OffersAdaptor {
     });
     return Offer.copyConstructor(deletedOffer);
   }
+
+  /**
+   * Add a bid to an offer.
+   * @param {Object} bid
+   * @return {Promise<Object>} the newly added bid
+   */
+  async asyncAddBid(bid) {
+    const newBid = await this.fetchJSON(
+      `${this.resourceURL}/${bid.offer.id}/bids`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(bid),
+      }
+    );
+
+    return newBid;
+  }
 }
