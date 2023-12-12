@@ -1,6 +1,5 @@
 package app.models;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 
@@ -44,7 +43,7 @@ public class Account {
   }
 
   public boolean associateBid(Bid bid) {
-    if(this.bids.contains(bid)) {
+    if (this.bids.contains(bid)) {
       return false;
     }
 

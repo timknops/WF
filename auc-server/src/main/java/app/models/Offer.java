@@ -2,7 +2,6 @@ package app.models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIncludeProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
 
@@ -13,21 +12,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-
-
 @NamedQueries({
-        @NamedQuery(
-                name ="Offer_find_by_status",
-                query = "SELECT o FROM Offer o WHERE o.status = upper(?1) "
-        ),
-        @NamedQuery(
-                name = "Offer_find_by_title",
-                query = "SELECT o FROM Offer o WHERE LOWER(o.title) LIKE LOWER(CONCAT('%', ?1, '%'))"
-        ),
-        @NamedQuery(
-                name= "Offer_find_by_status_and_minBidValue",
-                query = "SELECT o FROM Offer o WHERE o.status = Upper(?1) AND o.valueHighestBid >= ?2"
-        )
+        @NamedQuery(name = "Offer_find_by_status", query = "SELECT o FROM Offer o WHERE o.status = upper(?1) "),
+        @NamedQuery(name = "Offer_find_by_title", query = "SELECT o FROM Offer o WHERE LOWER(o.title) LIKE LOWER(CONCAT('%', ?1, '%'))"),
+        @NamedQuery(name = "Offer_find_by_status_and_minBidValue", query = "SELECT o FROM Offer o WHERE o.status = Upper(?1) AND o.valueHighestBid >= ?2")
 })
 /**
  * Modal for an offer
@@ -83,7 +71,7 @@ public class Offer {
 
     @OneToMany(mappedBy = "offer", cascade = CascadeType.REMOVE)
     @JsonView(ViewClasses.FindOne.class)
-    @JsonIncludeProperties(value = {"id", "value", "madeBy"})
+    @JsonIncludeProperties(value = { "id", "value", "madeBy" })
     private List<Bid> bids = new ArrayList<>();
 
     @Transient
@@ -311,6 +299,7 @@ public class Offer {
 
         /**
          * Check if a status is correct
+         * 
          * @param status a string representation
          * @return true, if status is valid otherwise false
          */

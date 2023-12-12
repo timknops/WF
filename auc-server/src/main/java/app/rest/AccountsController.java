@@ -2,14 +2,10 @@ package app.rest;
 
 import java.util.List;
 
-import javax.swing.text.html.parser.Entity;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,7 +15,6 @@ import app.exceptions.ResourceNotFoundException;
 import app.models.Account;
 import app.models.ViewClasses;
 import app.repositories.EntityRepository;
-import app.security.JWToken;
 
 @RestController
 @RequestMapping("/accounts")

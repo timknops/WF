@@ -1,9 +1,6 @@
 package app.models;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIncludeProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
 import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
 
@@ -22,11 +19,11 @@ public class Bid {
     private double value;
 
     @ManyToOne
-    @JsonIncludeProperties(value = {"id", "title", "status"})
+    @JsonIncludeProperties(value = { "id", "title", "status" })
     private Offer offer;
 
     @ManyToOne
-    @JsonIncludeProperties(value = {"id","name"})
+    @JsonIncludeProperties(value = { "id", "name" })
     @JsonView(ViewClasses.FindAll.class)
     private Account madeBy;
 
@@ -37,7 +34,6 @@ public class Bid {
 
     public Bid() {
     }
-
 
     /**
      * Associates this bid with an offer, if the offer is not already associated.
@@ -92,7 +88,6 @@ public class Bid {
         this.madeBy = madeBy;
     }
 
-
     public void setId(long id) {
         this.id = id;
     }
@@ -107,8 +102,10 @@ public class Bid {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Bid bid)) return false;
+        if (this == o)
+            return true;
+        if (!(o instanceof Bid bid))
+            return false;
         return getId() == bid.getId();
     }
 

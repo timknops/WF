@@ -2,9 +2,6 @@ package app.rest;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.HttpClientErrorException.NotAcceptable;
-import org.springframework.web.server.NotAcceptableStatusException;
-
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
@@ -13,7 +10,6 @@ import app.exceptions.NotAcceptableException;
 import app.models.Account;
 import app.models.ViewClasses;
 import app.repositories.AccountsRepositoryJpa;
-import app.repositories.EntityRepository;
 import app.security.JWToken;
 import jakarta.servlet.http.HttpServletRequest;
 
