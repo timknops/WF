@@ -26,11 +26,10 @@ export class FetchInterceptor {
   }
 
   response(response) {
-    // FetchInterceptor.theInstance.tryRecoverNewJWToken(response);
-
     if (response.status >= 400 && response.status < 600) {
       FetchInterceptor.theInstance.handleErrorInResponse(response);
     }
+
     return response;
   }
 
@@ -51,16 +50,4 @@ export class FetchInterceptor {
       throw response;
     }
   }
-
-  // /** Recover a new token, if any */
-  // tryRecoverNewJWToken(response) {
-  //   console.log(response)
-  //   // const newToken = response.headers.get("Authorization");
-  //   // if (newToken) {
-  //   //   FetchInterceptor.theInstance.sessionService.saveTokenIntoBrowserStorage(
-  //   //     newToken,
-  //   //     FetchInterceptor.theInstance.sessionService.currentAccount
-  //   //   );
-  //   // }
-  // }
 }
