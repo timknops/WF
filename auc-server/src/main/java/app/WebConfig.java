@@ -14,8 +14,8 @@ public class WebConfig implements WebMvcConfigurer {
     public static final String IP_FORWARDED_FOR = "X-Forwarded-For";
 
     // path prefixes that will be protected by the authentication filter
-//    public Set<String> SECURED_PATHS = Set.of("/offers", "/bids", "/accounts");
-    public Set<String> SECURED_PATHS = Set.of("/dummy");
+    public Set<String> SECURED_PATHS = Set.of("/offers", "/bids", "/accounts");
+    // public Set<String> SECURED_PATHS = Set.of("/dummy");
     // A variable reboot signature can be used as an additional security layer in
     // authentication tokens.
     private static final double REBOOT_CODE = 63.0427; // Math.random().
