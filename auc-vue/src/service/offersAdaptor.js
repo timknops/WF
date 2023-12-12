@@ -22,9 +22,19 @@ export class OffersAdaptor {
    * return all offers from the backend
    * @return {Promise<[Offer]> || null} a list of offers or null
    */
-  async asyncFindAll() {
-    const data = await this.fetchJSON(this.resourceURL);
+  async asyncFindAll(queryParams = null) {
+    const url = this.appendQueryParams(this.resourceURL, queryParams);
+    const data = await this.fetchJSON(url);
     return data?.map((offer) => Offer.copyConstructor(offer));
+  }
+
+  /** Appends the query params in to the url. */
+  appendQueryParams(url, queryParams) {
+    if (queryParams) {
+      const urlParams = new URLSearchParams(queryParams);
+      url += "?" + urlParams.toString();
+    }
+    return url;
   }
 
   /**

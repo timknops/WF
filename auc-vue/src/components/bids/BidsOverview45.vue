@@ -1,7 +1,7 @@
 <template>
   <div class="container d-flex mt-5">
-    <div class="w-25 mx-5">
-      <h2 class="p-0 fw-bold text-primary">List of all offers</h2>
+    <div class="w-50 mx-5">
+      <h2 class="p-0 fw-bold text-primary">All offers (on sale)</h2>
       <div
         class="rounded-3 my-3 px-0 border overflow-x-hidden overflow-y-scroll table-container"
         ref="tableDiv"
@@ -10,6 +10,8 @@
           <thead>
             <tr class="sticky-top">
               <th scope="col">Title</th>
+              <th scope="col">Highest Bid</th>
+              <th scope="col">Made By</th>
             </tr>
           </thead>
           <tbody>
@@ -20,12 +22,11 @@
               @click="setSelectedOffer(offer)"
             >
               <td>{{ offer.title }}</td>
+              <td>{{ offer.valueHighestBid }}</td>
+              <td>{{ highestBidder(offer) }}</td>
             </tr>
           </tbody>
         </table>
-      </div>
-      <div class="d-flex justify-content-end p-0 mb-3">
-        <button class="btn btn-primary" @click="onNewOffer">New Offer</button>
       </div>
     </div>
     <div class="w-75 mt-5 pt-2">
@@ -52,22 +53,15 @@ export default {
       selectedOffer: null,
     };
   },
+  async created() {
+    // Get all offers with the status "FOR_SALE.
+    this.offers = await this.offersService.asyncFindAll({
+      status: "FOR_SALE",
+    });
+  },
   methods: {
     async createNewOffer() {
       return await this.offersService.asyncSave(Offer.createEmptyOffer());
-    },
-
-    async onNewOffer() {
-      const newOffer = await this.createNewOffer();
-      this.offers.push(newOffer);
-
-      await this.$nextTick(); // Wait for the DOM to update.
-      this.$refs.tableDiv.scrollTop = this.$refs.tableDiv.scrollHeight;
-
-      this.selectedOffer = newOffer;
-      this.$router.push(
-        this.$route.matched[0].path + "/" + this.selectedOffer.id
-      );
     },
 
     setSelectedOffer(offer) {
@@ -88,9 +82,19 @@ export default {
     async refreshOffers() {
       this.offers = await this.offersService.asyncFindAll();
     },
-  },
-  async created() {
-    this.offers = await this.offersService.asyncFindAll();
+
+    highestBidder(offer) {
+      if (!offer || !offer.bids || offer.bids.length === 0) {
+        return "";
+      }
+
+      // Find the highest bid.
+      const highestBid = offer.bids.find(
+        (bid) => bid.value === offer.valueHighestBid
+      );
+
+      return highestBid.madeBy.name;
+    },
   },
   watch: {
     $route() {

@@ -70,7 +70,7 @@ public class Offer {
     private int valueHighestBid;
 
     @OneToMany(mappedBy = "offer", cascade = CascadeType.REMOVE)
-    @JsonView(ViewClasses.FindOne.class)
+    @JsonView(ViewClasses.FindAll.class)
     @JsonIncludeProperties(value = { "id", "value", "madeBy" })
     private List<Bid> bids = new ArrayList<>();
 
